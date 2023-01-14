@@ -2,9 +2,9 @@ name: pipeline
 
 on:
   push:
-    branches: [githubactions]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 jobs: 
   build:
