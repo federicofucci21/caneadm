@@ -1,4 +1,6 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, Model, Table } from 'sequelize-typescript';
+import { Order } from 'src/order/order.model';
+import { OrderDetail } from 'src/orderDetail/orderDetail.model';
 
 @Table
 export class Product extends Model {
@@ -13,4 +15,7 @@ export class Product extends Model {
 
   @Column({ defaultValue: true })
   isActive: boolean;
+
+  @BelongsToMany(() => Order, () => OrderDetail)
+  orders: Order[];
 }
