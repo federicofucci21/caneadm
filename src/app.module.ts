@@ -8,6 +8,7 @@ import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
 import { Product } from './product/product.model';
 import { Order } from './order/order.model';
+import { OrderDetail } from './orderDetail/orderDetail.model';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { Order } from './order/order.model';
       username: 'root',
       password: 'mysql',
       database: 'caneadm',
-      models: [User, Product, Order],
+      models: [User, Product, Order, OrderDetail],
       autoLoadModels: true,
       synchronize: true,
     }),
