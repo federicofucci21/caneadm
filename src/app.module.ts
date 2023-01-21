@@ -9,16 +9,22 @@ import { OrderModule } from './order/order.module';
 import { Product } from './product/product.model';
 import { Order } from './order/order.model';
 import { OrderDetail } from './orderDetail/orderDetail.model';
+import { DatabaseModule } from './core/database/database.module';
+import { ConfigModule } from '@nestjs/config';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     SequelizeModule.forRoot({
       dialect: 'mysql',
-      host: 'localhost',
+      host: process.env.DB_HOST,
       port: 3306,
-      username: 'root',
-      password: 'mysql',
-      database: 'caneadm',
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME_DEVELOPMENT,
       models: [User, Product, Order, OrderDetail],
       autoLoadModels: true,
       synchronize: true,
@@ -26,6 +32,7 @@ import { OrderDetail } from './orderDetail/orderDetail.model';
     UserModule,
     ProductModule,
     OrderModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

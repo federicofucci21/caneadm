@@ -2,7 +2,7 @@ import { Column, Model, Table, HasMany } from 'sequelize-typescript';
 import { Order } from 'src/order/order.model';
 
 @Table
-export class User extends Model {
+export class User extends Model<User> {
   @Column
   firstName: string;
 
