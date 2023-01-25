@@ -11,7 +11,7 @@ import { Product } from 'src/product/product.model';
 import { User } from 'src/user/user.model';
 
 @Table
-export class Order extends Model {
+export class Order extends Model<Order> {
   @Column
   state: string;
 
