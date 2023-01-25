@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { User } from './user.model';
 import { UserDto } from './dto/user.dto';
-import { USER_REPOSITORY } from 'src/core/constants';
+import { USER_REPOSITORY } from '../core/constants';
 
 @Injectable()
 export class UserService {
@@ -9,16 +9,32 @@ export class UserService {
     @Inject(USER_REPOSITORY) private readonly userRepository: typeof User,
   ) {}
 
-  async create(user: UserDto): Promise<User> {
+  async createUser(user: UserDto): Promise<User> {
     return await this.userRepository.create<User>(user);
+  }
+
+  async findAll(): Promise<User[]> {
+    return this.userRepository.findAll();
   }
 
   async findOneByEmail(email: string): Promise<User> {
     return await this.userRepository.findOne<User>({ where: { email } });
   }
 
-  async findOneById(id: number): Promise<User> {
-    return await this.userRepository.findOne<User>({ where: { id } });
+  async getById(id: number): Promise<User> {
+    return await this.userRepository.findByPk<User>(id);
+  }
+
+  async deleteUser(id: string): Promise<User> {
+    const user = await this.userRepository.findByPk(id);
+    if (user.isActive) {
+      return await user.update({
+        isActive: false,
+      });
+    }
+    return await user.update({
+      isActive: true,
+    });
   }
 }
 // import { Injectable } from '@nestjs/common';
