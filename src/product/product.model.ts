@@ -3,7 +3,7 @@ import { Order } from 'src/order/order.model';
 import { OrderDetail } from 'src/orderDetail/orderDetail.model';
 
 @Table
-export class Product extends Model {
+export class Product extends Model<Product> {
   @Column
   name: string;
 
