@@ -6,9 +6,9 @@ import {
   BelongsToMany,
   ForeignKey,
 } from 'sequelize-typescript';
-import { OrderDetail } from 'src/orderDetail/orderDetail.model';
-import { Product } from 'src/product/product.model';
-import { User } from 'src/user/user.model';
+import { OrderDetail } from '../orderDetail/orderDetail.model';
+import { Product } from '../product/product.model';
+import { User } from '../user/user.model';
 
 @Table
 export class Order extends Model<Order> {

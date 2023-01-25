@@ -1,6 +1,6 @@
 import { BelongsToMany, Column, Model, Table } from 'sequelize-typescript';
-import { Order } from 'src/order/order.model';
-import { OrderDetail } from 'src/orderDetail/orderDetail.model';
+import { Order } from '../order/order.model';
+import { OrderDetail } from '../orderDetail/orderDetail.model';
 
 @Table
 export class Product extends Model<Product> {
