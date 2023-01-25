@@ -24,6 +24,18 @@ export class UserService {
   async getById(id: number): Promise<User> {
     return await this.userRepository.findByPk<User>(id);
   }
+
+  async deleteUser(id: string): Promise<User> {
+    const user = await this.userRepository.findByPk(id);
+    if (user.isActive) {
+      return await user.update({
+        isActive: false,
+      });
+    }
+    return await user.update({
+      isActive: true,
+    });
+  }
 }
 // import { Injectable } from '@nestjs/common';
 // import { InjectModel } from '@nestjs/sequelize';
