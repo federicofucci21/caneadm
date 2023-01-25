@@ -1,5 +1,5 @@
 import { Product } from './product.model';
-import { PRODUCT_REPOSITORY } from 'src/core/constants';
+import { PRODUCT_REPOSITORY } from '../core/constants';
 
 export const productProviders = [
   {
