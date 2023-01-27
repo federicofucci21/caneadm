@@ -11,6 +11,7 @@ import { OrderModule } from './order/order.module';
 // import { Order } from './order/order.model';
 // import { OrderDetail } from './orderDetail/orderDetail.model';
 import { DatabaseModule } from './core/database/database.module';
+import { OrderDetailModule } from './orderDetail/orderDetail.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { DatabaseModule } from './core/database/database.module';
     UserModule,
     ProductModule,
     OrderModule,
+    OrderDetailModule,
     DatabaseModule,
   ],
   controllers: [AppController],

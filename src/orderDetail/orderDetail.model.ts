@@ -4,6 +4,9 @@ import { Product } from '../product/product.model';
 
 @Table
 export class OrderDetail extends Model {
+  @Column
+  quantity: number;
+
   @ForeignKey(() => Product)
   @Column
   productId: number;
