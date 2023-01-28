@@ -83,6 +83,23 @@ export class UserService {
       return 'bad';
     }
   }
+
+  async cartUpdate(userId, product) {
+    const order = await this.orderRepository.findOne({
+      where: {
+        userId: userId,
+        state: 'open',
+      },
+    });
+    const orderDetail = await this.orderDetailRepository.findOne({
+      where: {
+        orderId: order.id,
+        productId: product.productId,
+      },
+    });
+    orderDetail.quantity = product.quantity;
+    return orderDetail.save();
+  }
 }
 // import { Injectable } from '@nestjs/common';
 // import { InjectModel } from '@nestjs/sequelize';
