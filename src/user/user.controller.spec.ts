@@ -1,4 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { orderDetailProviders } from '../orderDetail/orderDetail.providers';
+import { orderProviders } from '../order/order.providers';
+import { OrderService } from '../order/order.service';
 import { UserController } from './user.controller';
 import { userProviders } from './user.providers';
 import { UserService } from './user.service';
@@ -9,7 +12,13 @@ describe('UserController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
-      providers: [UserService, ...userProviders],
+      providers: [
+        UserService,
+        OrderService,
+        ...userProviders,
+        ...orderProviders,
+        ...orderDetailProviders,
+      ],
     }).compile();
 
     controller = module.get<UserController>(UserController);
