@@ -56,4 +56,9 @@ export class UserController {
   async deleteOrder2(@Param('id') id: number): Promise<any> {
     return await this.userService.deleteOrder(id);
   }
+
+  @Get(':id/cart')
+  async getAllItems2(@Param('id') id: number): Promise<object> {
+    return await this.userService.getAllItems(id);
+  }
 }

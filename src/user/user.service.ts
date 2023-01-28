@@ -8,6 +8,7 @@ import {
 } from '../core/constants';
 import { Order } from '../order/order.model';
 import { OrderDetail } from '../orderDetail/orderDetail.model';
+import { Product } from '../product/product.model';
 
 @Injectable()
 export class UserService {
@@ -46,6 +47,7 @@ export class UserService {
     });
   }
 
+  //Find or Create Order
   async cartCreate(userId, product) {
     const order = await this.orderRepository.findOrCreate({
       where: { userId: userId, state: 'open' },
@@ -57,6 +59,7 @@ export class UserService {
     });
   }
 
+  //Update item quantity
   async cartUpdate(userId, product) {
     const order = await this.orderRepository.findOne({
       where: {
@@ -78,6 +81,35 @@ export class UserService {
     return await Order.destroy({
       where: { userId: id, state: 'open' },
     });
+  }
+
+  async getAllItems(id: number) {
+    let object = {};
+    const order = await Order.findOne({
+      where: {
+        userId: id,
+        state: 'open',
+      },
+      include: [
+        { model: Product, as: 'products' },
+        { model: User, as: 'user' },
+      ],
+    });
+    // console.log('ORDER', order.dataValues.id);
+    if (order) {
+      const orderDetail = await OrderDetail.findAll({
+        where: {
+          orderId: order.dataValues.id,
+        },
+      });
+      // console.log('ORDERDETAIL', orderDetail);
+      object = {
+        orderId: order.dataValues.id,
+        products: order.dataValues.products,
+        orderDetail,
+      };
+    }
+    return object;
   }
 }
 // import { Injectable } from '@nestjs/common';
