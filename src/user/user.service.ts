@@ -77,12 +77,14 @@ export class UserService {
     return orderDetail.save();
   }
 
+  //Delete Order
   async deleteOrder(id: number) {
     return await Order.destroy({
       where: { userId: id, state: 'open' },
     });
   }
 
+  //Get all Order's Item
   async getAllItems(id: number) {
     let object = {};
     const order = await Order.findOne({
