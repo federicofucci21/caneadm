@@ -25,4 +25,9 @@ export class UserController {
   async deleteUser(@Param('id') id: string): Promise<User> {
     return await this.userService.deleteUser(id);
   }
+
+  @Post(':id/cart')
+  cartCreate2(@Param('id') userId: number, @Body() product: number): string {
+    return this.userService.cartCreate(userId, product);
+  }
 }

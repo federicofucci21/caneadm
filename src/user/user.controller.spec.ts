@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { orderDetailProviders } from '../orderDetail/orderDetail.providers';
 import { orderProviders } from '../order/order.providers';
 import { OrderService } from '../order/order.service';
 import { UserController } from './user.controller';
@@ -16,6 +17,7 @@ describe('UserController', () => {
         OrderService,
         ...userProviders,
         ...orderProviders,
+        ...orderDetailProviders,
       ],
     }).compile();
 
