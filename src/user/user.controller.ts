@@ -7,6 +7,8 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+// import { Order } from '../order/order.model';
+import { OrderDetail } from '../orderDetail/orderDetail.model';
 import { UserDto } from './dto/user.dto';
 import { User } from './user.model';
 import { UserService } from './user.service';
@@ -35,7 +37,10 @@ export class UserController {
   }
 
   @Post(':id/cart')
-  cartCreate2(@Param('id') userId: number, @Body() product: number): string {
+  cartCreate2(
+    @Param('id') userId: number,
+    @Body() product: number,
+  ): Promise<OrderDetail> {
     return this.userService.cartCreate(userId, product);
   }
 
@@ -45,5 +50,10 @@ export class UserController {
     @Body() product: number,
   ): Promise<any> {
     return await this.userService.cartUpdate(userId, product);
+  }
+
+  @Delete(':id/cart')
+  async deleteOrder2(@Param('id') id: number): Promise<any> {
+    return await this.userService.deleteOrder(id);
   }
 }

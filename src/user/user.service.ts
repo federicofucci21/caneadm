@@ -46,42 +46,15 @@ export class UserService {
     });
   }
 
-  cartCreate(userId, product) {
-    console.log('productId', product.productId);
-    console.log('userId', userId);
-    console.log('quantity', product.quantity);
-    if (userId) {
-      this.orderRepository
-        .findOne({ where: { userId: userId, state: 'open' } })
-        .then((order) => {
-          if (!order) {
-            return this.orderRepository.create({
-              state: 'open',
-            });
-          }
-          return order;
-        })
-        .then((order) => {
-          console.log('orderrr', order);
-          order.userId = userId;
-          console.log('orderrr22', order);
-          return order.save();
-        })
-        .then((order): Promise<OrderDetail> => {
-          if (product.productId) {
-            return this.orderDetailRepository.create({
-              quantity: product.quantity,
-              orderId: order.id,
-              productId: product.productId,
-            });
-          }
-        })
-        .catch((err) => {
-          return err;
-        });
-    } else {
-      return 'bad';
-    }
+  async cartCreate(userId, product) {
+    const order = await this.orderRepository.findOrCreate({
+      where: { userId: userId, state: 'open' },
+    });
+    return await this.orderDetailRepository.create({
+      quantity: product.quantity,
+      orderId: order[0].dataValues.id,
+      productId: product.productId,
+    });
   }
 
   async cartUpdate(userId, product) {
@@ -99,6 +72,12 @@ export class UserService {
     });
     orderDetail.quantity = product.quantity;
     return orderDetail.save();
+  }
+
+  async deleteOrder(id: number) {
+    return await Order.destroy({
+      where: { userId: id, state: 'open' },
+    });
   }
 }
 // import { Injectable } from '@nestjs/common';
