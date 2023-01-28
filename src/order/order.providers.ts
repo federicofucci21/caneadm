@@ -1,5 +1,5 @@
 import { Order } from './order.model';
-import { ORDER_REPOSITORY } from 'src/core/constants';
+import { ORDER_REPOSITORY } from '../core/constants';
 
 export const orderProviders = [
   {

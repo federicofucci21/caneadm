@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import { User } from './user.model';
 import { UserService } from './user.service';
@@ -24,5 +32,18 @@ export class UserController {
   @Delete(':id')
   async deleteUser(@Param('id') id: string): Promise<User> {
     return await this.userService.deleteUser(id);
+  }
+
+  @Post(':id/cart')
+  cartCreate2(@Param('id') userId: number, @Body() product: number): string {
+    return this.userService.cartCreate(userId, product);
+  }
+
+  @Put(':id/cart')
+  async cartUpdate2(
+    @Param('id') userId: number,
+    @Body() product: number,
+  ): Promise<any> {
+    return await this.userService.cartUpdate(userId, product);
   }
 }
