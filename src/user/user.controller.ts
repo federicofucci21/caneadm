@@ -7,6 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+// import { productProviders } from 'src/product/product.provider';
 // import { Order } from '../order/order.model';
 import { OrderDetail } from '../orderDetail/orderDetail.model';
 import { UserDto } from './dto/user.dto';
@@ -60,5 +61,10 @@ export class UserController {
   @Get(':id/cart')
   async getAllItems2(@Param('id') id: number): Promise<object> {
     return await this.userService.getAllItems(id);
+  }
+
+  @Delete(':id/cart/:productId')
+  async delteItem2(@Param('productId') productId, @Body() orderId) {
+    return await this.userService.deleteItem(orderId, productId);
   }
 }

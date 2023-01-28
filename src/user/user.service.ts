@@ -113,6 +113,14 @@ export class UserService {
     }
     return object;
   }
+
+  async deleteItem(orderId, productId) {
+    console.log('productID', productId);
+    console.log('orderId', orderId);
+    return OrderDetail.destroy({
+      where: { orderId: orderId.orderId, productId: productId },
+    });
+  }
 }
 // import { Injectable } from '@nestjs/common';
 // import { InjectModel } from '@nestjs/sequelize';
