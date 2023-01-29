@@ -1,5 +1,5 @@
 export class OrderDto {
   readonly state: string;
-  readonly price: number;
+  readonly total: number;
   readonly userId: number;
 }

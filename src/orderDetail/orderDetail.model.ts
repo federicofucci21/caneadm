@@ -7,8 +7,8 @@ export class OrderDetail extends Model {
   @Column
   quantity: number;
 
-  // @Column
-  // price: number;
+  @Column
+  price: number;
 
   @ForeignKey(() => Product)
   @Column

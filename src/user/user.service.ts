@@ -4,16 +4,20 @@ import { UserDto } from './dto/user.dto';
 import {
   ORDER_DETAIL_REPOSITORY,
   ORDER_REPOSITORY,
+  PRODUCT_REPOSITORY,
   USER_REPOSITORY,
 } from '../core/constants';
 import { Order } from '../order/order.model';
 import { OrderDetail } from '../orderDetail/orderDetail.model';
 import { Product } from '../product/product.model';
+import { totalCalculator } from '../helpers/total';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: typeof User,
+    @Inject(PRODUCT_REPOSITORY)
+    private readonly productRepository: typeof Product,
     @Inject(ORDER_REPOSITORY) private readonly orderRepository: typeof Order,
     @Inject(ORDER_DETAIL_REPOSITORY)
     private readonly orderDetailRepository: typeof OrderDetail,
@@ -52,6 +56,22 @@ export class UserService {
     const order = await this.orderRepository.findOrCreate({
       where: { userId: userId, state: 'open' },
     });
+    console.log('ORDER', order);
+    const priceProduct = await this.productRepository.findByPk(
+      product.productId,
+    );
+    const updateOrder = await this.orderRepository.findByPk(
+      order[0].dataValues.id,
+    );
+    const totalPrice = totalCalculator(
+      product.quantity,
+      priceProduct.price,
+      updateOrder.total,
+    );
+    await updateOrder.update({
+      total: totalPrice,
+    });
+
     return await this.orderDetailRepository.create({
       quantity: product.quantity,
       orderId: order[0].dataValues.id,

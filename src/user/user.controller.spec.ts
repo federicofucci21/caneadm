@@ -5,6 +5,7 @@ import { OrderService } from '../order/order.service';
 import { UserController } from './user.controller';
 import { userProviders } from './user.providers';
 import { UserService } from './user.service';
+import { productProviders } from '../product/product.provider';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -18,6 +19,7 @@ describe('UserController', () => {
         ...userProviders,
         ...orderProviders,
         ...orderDetailProviders,
+        ...productProviders,
       ],
     }).compile();
 
