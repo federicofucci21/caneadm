@@ -7,8 +7,6 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-// import { productProviders } from 'src/product/product.provider';
-// import { Order } from '../order/order.model';
 import { OrderDetail } from '../orderDetail/orderDetail.model';
 import { UserDto } from './dto/user.dto';
 import { User } from './user.model';
@@ -28,7 +26,6 @@ export class UserController {
 
   @Post()
   async createUser(@Body() user: UserDto): Promise<User> {
-    // create a new user and return the newly created user
     return await this.userService.createUser(user);
   }
 
