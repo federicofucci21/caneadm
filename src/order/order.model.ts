@@ -16,7 +16,7 @@ export class Order extends Model<Order> {
   state: string;
 
   @Column
-  price: number;
+  total: number;
 
   @ForeignKey(() => User)
   @Column

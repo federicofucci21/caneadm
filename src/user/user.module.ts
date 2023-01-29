@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { orderProviders } from 'src/order/order.providers';
 import { orderDetailProviders } from 'src/orderDetail/orderDetail.providers';
+import { productProviders } from '../product/product.provider';
 import { UserController } from './user.controller';
 import { userProviders } from './user.providers';
 import { UserService } from './user.service';
@@ -11,6 +12,7 @@ import { UserService } from './user.service';
   providers: [
     UserService,
     ...userProviders,
+    ...productProviders,
     ...orderProviders,
     ...orderDetailProviders,
   ],
