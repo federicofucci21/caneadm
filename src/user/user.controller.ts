@@ -16,12 +16,13 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get()
-  getAllUsers() {
-    return this.userService.findAll();
+  async getAllUsers() {
+    console.log('RES', await this.userService.findAll());
+    return await this.userService.findAll();
   }
   @Get(':id')
-  getUserById(@Param('id') id: string) {
-    return this.userService.getById(Number(id));
+  async getUserById(@Param('id') id: string) {
+    return await this.userService.getById(Number(id));
   }
 
   @Post()

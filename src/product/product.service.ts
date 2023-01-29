@@ -33,4 +33,15 @@ export class ProductService {
       isActive: true,
     });
   }
+
+  async updateProduct(id: string, product: Product): Promise<Product> {
+    const updateProduct = await this.productRepository.findByPk<Product>(id);
+    if (updateProduct) {
+      return await updateProduct.update({
+        name: product.name,
+        price: product.price,
+        stock: product.stock,
+      });
+    }
+  }
 }

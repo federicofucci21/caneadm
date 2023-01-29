@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Put } from '@nestjs/common/decorators';
 import { ProductDto } from './dto/product.dto';
 import { Product } from './product.model';
 import { ProductService } from './product.service';
@@ -23,5 +24,13 @@ export class ProductController {
   @Delete(':id')
   async deleteProduct(@Param('id') id: string): Promise<Product> {
     return await this.productService.deleteProduct(id);
+  }
+
+  @Put(':id')
+  async updateProduct(
+    @Param('id') id: string,
+    @Body() product: Product,
+  ): Promise<Product> {
+    return await this.productService.updateProduct(id, product);
   }
 }
