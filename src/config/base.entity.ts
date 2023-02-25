@@ -5,18 +5,18 @@ import {
 } from 'typeorm';
 
 export abstract class BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('increment')
   id: string;
 
   @CreateDateColumn({
     type: 'timestamp',
-    name: 'created_at',
+    name: 'createdAt',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamp',
-    name: 'updated_at',
+    name: 'updatedAt',
   })
   updatedAt: Date;
 }

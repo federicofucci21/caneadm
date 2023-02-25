@@ -23,4 +23,7 @@ export class UserEntity extends BaseEntity {
 
   @Column({ default: true })
   isFunny: boolean;
+
+  @Column({ default: true })
+  isHuman: boolean;
 }

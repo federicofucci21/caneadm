@@ -1,20 +1,21 @@
-import { ConfigModule /*, ConfigService*/ } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 ConfigModule.forRoot({
   envFilePath: `.${process.env.NODE_ENV}.env`,
 });
 
-// const configService = new ConfigService();
-
 export const DataSourceConfig: DataSourceOptions = {
   type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: 'mysqls',
-  database: 'caneadm',
+  host: process.env.DB_HOST,
+  port: +process.env.DB_PORT, //le agrego el '+' para pasarlo a numero y poder correr la migracion, ya que todas las variables de entorno son del tipo 'string'
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME_DEVELOPMENT,
   entities: [__dirname + '/../**/**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../migrations/*{.ts,.js}'],
   synchronize: false,
