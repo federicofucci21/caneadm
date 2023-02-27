@@ -12,7 +12,7 @@ ConfigModule.forRoot({
 export const DataSourceConfig: DataSourceOptions = {
   type: 'mysql',
   host: process.env.DB_HOST,
-  port: +process.env.DB_PORT, //le agrego el '+' para pasarlo a numero y poder correr la migracion, ya que todas las variables de entorno son del tipo 'string'
+  port: +process.env.DB_PORT,
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME_DEVELOPMENT,
