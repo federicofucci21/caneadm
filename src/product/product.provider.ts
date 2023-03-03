@@ -1,9 +1,8 @@
-import { Product } from './product.model';
-import { PRODUCT_REPOSITORY } from '../core/constants';
+import { ProductEntity } from './entities/product.entity';
 
 export const productProviders = [
   {
-    provide: PRODUCT_REPOSITORY,
-    useValue: Product,
+    provide: 'PRODUCT_REPOSITORY',
+    useValue: ProductEntity,
   },
 ];

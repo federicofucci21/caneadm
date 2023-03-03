@@ -1,9 +1,8 @@
-import { Order } from './order.model';
-import { ORDER_REPOSITORY } from '../core/constants';
+import { OrderEntity } from './entities/order.entity';
 
 export const orderProviders = [
   {
-    provide: ORDER_REPOSITORY,
-    useValue: Order,
+    provide: 'ORDER_REPOSITORY',
+    useValue: OrderEntity,
   },
 ];
