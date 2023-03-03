@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
-// import { OrderModule } from './order/order.module';
-// import { DatabaseModule } from './core/database/database.module';
+import { OrderModule } from './order/order.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceConfig } from './config/data.source';
 
@@ -16,8 +15,7 @@ import { DataSourceConfig } from './config/data.source';
     TypeOrmModule.forRoot({ ...DataSourceConfig }),
     UserModule,
     ProductModule,
-    // OrderModule,
-    // DatabaseModule,
+    OrderModule,
   ],
 })
 export class AppModule {}

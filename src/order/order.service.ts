@@ -1,19 +1,30 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { Order } from './order.model';
-import { OrderDto } from './dto/order.dto';
-import { ORDER_REPOSITORY } from '../core/constants';
+import { OrderDTO } from './dto/order.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { OrderEntity } from './entities/order.entity';
+import { Repository } from 'typeorm';
 
-@Injectable()
 export class OrderService {
   constructor(
-    @Inject(ORDER_REPOSITORY) private readonly orderRepository: typeof Order,
+    @InjectRepository(OrderEntity)
+    private readonly orderRepository: Repository<OrderEntity>,
   ) {}
 
-  async create(order: OrderDto): Promise<Order> {
-    return await this.orderRepository.create<Order>(order);
+  public async create(order: OrderDTO): Promise<OrderEntity> {
+    try {
+      return await this.orderRepository.save(order);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  async findOneById(id: number): Promise<Order> {
-    return await this.orderRepository.findOne<Order>({ where: { id } });
+  public async findOneById(id: number): Promise<OrderEntity> {
+    try {
+      return await this.orderRepository
+        .createQueryBuilder('orders')
+        .where({ id })
+        .getOne();
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }
