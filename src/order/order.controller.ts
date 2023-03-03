@@ -8,11 +8,11 @@ export class OrderController {
 
   @Get()
   public async getAllOrders(@Body() body: OrderDTO) {
-    return await this.orderService.create(body);
+    return 'aca estan todas' /*await this.orderService.create(body)*/;
   }
 
   @Get(':id')
   public async getOrderById(@Param('id') id: string) {
-    return this.orderService.findOneById(Number(id));
+    return 'aca hay una' /*this.orderService.findOneById(Number(id))*/;
   }
 }

@@ -51,7 +51,7 @@ export class ProductService {
   }
 
   public async updateProduct(
-    id: string,
+    id: number,
     body: ProductUpdateDTO,
   ): Promise<UpdateResult | undefined> {
     try {

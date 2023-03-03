@@ -1,7 +1,7 @@
 import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 export class UserService {
   constructor(
@@ -25,11 +25,18 @@ export class UserService {
     }
   }
 
-  // async findOneByEmail(email: string): Promise<User> {
-  //   return await this.userRepository.findOne<User>({ where: { email } });
-  // }
+  public async findOneByEmail(email: string): Promise<UserEntity> {
+    try {
+      return await this.userRepository
+        .createQueryBuilder('users')
+        .where({ email })
+        .getOne();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 
-  public async findUserById(id: number): Promise<UserEntity> {
+  public async getById(id: number): Promise<UserEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder('users')
@@ -40,10 +47,12 @@ export class UserService {
     }
   }
 
-  //esto no hace soft delete OJO
-  public async deleteUser(id: string): Promise<DeleteResult | undefined> {
+  public async deleteUser(id: number): Promise<UpdateResult | undefined> {
     try {
-      const user: DeleteResult = await this.userRepository.delete(id);
+      const user: UpdateResult = await this.userRepository.update(id, {
+        isActive: false,
+      });
+
       if (user.affected === 0) {
         return undefined;
       }
@@ -52,21 +61,10 @@ export class UserService {
       throw new Error(error);
     }
   }
-  // async deleteUser(id: string): Promise<User> {
-  //   const user = await this.userRepository.findByPk(id);
-  //   if (user.isActive) {
-  //     return await user.update({
-  //       isActive: false,
-  //     });
-  //   }
-  //   return await user.update({
-  //     isActive: true,
-  //   });
-  // }
 
   public async updateUser(
+    id: number,
     body: UserUpdateDTO,
-    id: string,
   ): Promise<UpdateResult | undefined> {
     try {
       const user: UpdateResult = await this.userRepository.update(id, body);
