@@ -1,30 +1,13 @@
-// import { Injectable, Inject } from '@nestjs/common';
-// import { User } from './user.model';
-import { UserDTO, /*UserDto,*/ UserUpdateDTO } from './dto/user.dto';
-// import {
-//   ORDER_DETAIL_REPOSITORY,
-//   ORDER_REPOSITORY,
-//   PRODUCT_REPOSITORY,
-//   // USER_REPOSITORY,
-// } from '../core/constants';
-// import { Order } from '../order/order.model';
-// import { OrderDetail } from '../orderDetail/orderDetail.model';
-// import { Product } from '../product/product.model';
-// import { totalCalculator } from '../helpers/total';
+import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 
-// @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
-  // @Inject(USER_REPOSITORY) private readonly userRepository: typeof User, // @Inject(PRODUCT_REPOSITORY) // private readonly productRepository: typeof Product,
-  // @Inject(ORDER_REPOSITORY) private readonly orderRepository: typeof Order,
-  // @Inject(ORDER_DETAIL_REPOSITORY)
-  // private readonly orderDetailRepository: typeof OrderDetail,
 
   public async createUser(body: UserDTO): Promise<UserEntity> {
     try {
@@ -33,9 +16,6 @@ export class UserService {
       throw new Error(error);
     }
   }
-  // async createUser(user: UserDto): Promise<User> {
-  //   return await this.userRepository.create<User>(user);
-  // }
 
   public async findUsers(): Promise<UserEntity[]> {
     try {
@@ -44,27 +24,21 @@ export class UserService {
       throw new Error(error);
     }
   }
-  // async findAll(): Promise<User[]> {
-  //   return this.userRepository.findAll();
-  // }
 
   // async findOneByEmail(email: string): Promise<User> {
   //   return await this.userRepository.findOne<User>({ where: { email } });
   // }
 
-  public async findUserById(id: string): Promise<UserEntity> {
+  public async findUserById(id: number): Promise<UserEntity> {
     try {
       return await this.userRepository
-        .createQueryBuilder('user')
+        .createQueryBuilder('users')
         .where({ id })
         .getOne();
     } catch (error) {
       throw new Error(error);
     }
   }
-  // async getById(id: number): Promise<User> {
-  //   return await this.userRepository.findByPk<User>(id);
-  // }
 
   //esto no hace soft delete OJO
   public async deleteUser(id: string): Promise<DeleteResult | undefined> {
