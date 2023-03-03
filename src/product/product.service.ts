@@ -1,47 +1,70 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { Product } from './product.model';
-import { ProductDto } from './dto/product.dto';
-import { PRODUCT_REPOSITORY } from '../core/constants';
+import { ProductDTO, ProductUpdateDTO } from './dto/product.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProductEntity } from './entities/product.entity';
+import { Repository, UpdateResult } from 'typeorm';
 
-@Injectable()
 export class ProductService {
   constructor(
-    @Inject(PRODUCT_REPOSITORY)
-    private readonly productRepository: typeof Product,
+    @InjectRepository(ProductEntity)
+    private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  async createProduct(product: ProductDto): Promise<Product> {
-    return await this.productRepository.create<Product>(product);
+  public async createProduct(body: ProductDTO): Promise<ProductEntity> {
+    try {
+      return await this.productRepository.save(body);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  async findAll(): Promise<Product[]> {
-    return await this.productRepository.findAll();
+  public async findAll(): Promise<ProductEntity[]> {
+    try {
+      return await this.productRepository.find();
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  async findOneById(id: number): Promise<Product> {
-    return await this.productRepository.findByPk<Product>(id);
+  public async findOneById(id: number): Promise<ProductEntity> {
+    try {
+      return await this.productRepository
+        .createQueryBuilder('products')
+        .where({ id })
+        .getOne();
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  async deleteProduct(id: string): Promise<Product> {
-    const product = await this.productRepository.findByPk<Product>(id);
-    if (product.isActive) {
-      return await product.update({
+  public async deleteProduct(id: number): Promise<UpdateResult | undefined> {
+    try {
+      const product: UpdateResult = await this.productRepository.update(id, {
         isActive: false,
       });
+      if (product.affected === 0) {
+        return undefined;
+      }
+      return product;
+    } catch (error) {
+      throw new Error(error);
     }
-    return await product.update({
-      isActive: true,
-    });
   }
 
-  async updateProduct(id: string, product: Product): Promise<Product> {
-    const updateProduct = await this.productRepository.findByPk<Product>(id);
-    if (updateProduct) {
-      return await updateProduct.update({
-        name: product.name,
-        price: product.price,
-        stock: product.stock,
-      });
+  public async updateProduct(
+    id: string,
+    body: ProductUpdateDTO,
+  ): Promise<UpdateResult | undefined> {
+    try {
+      const product: UpdateResult = await this.productRepository.update(
+        id,
+        body,
+      );
+      if (product.affected === 0) {
+        return undefined;
+      }
+      return product;
+    } catch (error) {
+      throw new Error(error);
     }
   }
 }
