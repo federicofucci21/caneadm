@@ -39,6 +39,6 @@ export class ProductController {
     @Param('id') id: string,
     @Body() product: ProductUpdateDTO,
   ) {
-    return await this.productService.updateProduct(id, product);
+    return await this.productService.updateProduct(Number(id), product);
   }
 }

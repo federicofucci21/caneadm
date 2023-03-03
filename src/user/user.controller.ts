@@ -1,15 +1,15 @@
 import {
   Body,
   Controller,
-  // Delete,
+  Delete,
   Get,
-  // Param,
+  Param,
   Post,
-  // Put,
+  Put,
+  Query,
 } from '@nestjs/common';
 // import { OrderDetail } from '../orderDetail/orderDetail.model';
-import { UserDTO /*, UserDto*/ } from './dto/user.dto';
-// import { User } from './user.model';
+import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -20,28 +20,31 @@ export class UserController {
   public async getAllUsers() {
     return await this.userService.findUsers();
   }
-  // async getAllUsers() {
-  //   console.log('RES', await this.userService.findAll());
-  //   return await this.userService.findAll();
-  // }
 
-  // @Get(':id')
-  // async getUserById(@Param('id') id: string) {
-  //   return await this.userService.getById(Number(id));
-  // }
+  @Get('id/:id')
+  public async getUserById(@Param('id') id: string) {
+    return await this.userService.getById(Number(id));
+  }
+
+  @Get('email')
+  public async getUserByEmail(@Query('e') email: string) {
+    return await this.userService.findOneByEmail(email);
+  }
 
   @Post()
   public async createUser(@Body() body: UserDTO) {
     return await this.userService.createUser(body);
   }
-  // async createUser(@Body() user: UserDto): Promise<User> {
-  //   return await this.userService.createUser(user);
-  // }
 
-  // @Delete(':id')
-  // async deleteUser(@Param('id') id: string): Promise<User> {
-  //   return await this.userService.deleteUser(id);
-  // }
+  @Put('id/:id')
+  public async editUser(@Param('id') id: string, @Body() body: UserUpdateDTO) {
+    return await this.userService.updateUser(Number(id), body);
+  }
+
+  @Delete('id/:id')
+  public async deleteUser(@Param('id') id: string) {
+    return await this.userService.deleteUser(Number(id));
+  }
 
   // @Post(':id/cart')
   // cartCreate2(
