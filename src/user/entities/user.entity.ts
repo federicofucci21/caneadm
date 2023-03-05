@@ -1,5 +1,6 @@
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
-import { Column, Entity } from 'typeorm';
+import { OrderEntity } from '../../order/entities/order.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
@@ -13,7 +14,7 @@ export class UserEntity extends BaseEntity {
   email: string;
 
   @Column()
-  celphone: number;
+  cell: number;
 
   @Column()
   address: string;
@@ -21,9 +22,6 @@ export class UserEntity extends BaseEntity {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column({ default: true })
-  isFunny: boolean;
-
-  @Column({ default: true })
-  isHuman: boolean;
+  @OneToMany(() => OrderEntity, (order) => order.user)
+  orders: OrderEntity[];
 }

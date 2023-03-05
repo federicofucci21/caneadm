@@ -1,5 +1,6 @@
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
-import { Column, Entity } from 'typeorm';
+import { OrderDetailEntity } from '../../orderDetail/entities/orderDetail.entity';
 
 @Entity({ name: 'products' })
 export class ProductEntity extends BaseEntity {
@@ -14,4 +15,7 @@ export class ProductEntity extends BaseEntity {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(() => OrderDetailEntity, (orderDetail) => orderDetail.product)
+  orderDetailProduct: OrderDetailEntity[];
 }
