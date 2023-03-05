@@ -14,16 +14,13 @@ export class UserEntity extends BaseEntity {
   email: string;
 
   @Column()
-  cell: number;
+  cell: string;
 
   @Column()
   address: string;
 
   @Column({ default: true })
   isActive: boolean;
-
-  @Column()
-  status: string;
 
   @OneToMany(() => OrderEntity, (order) => order.user)
   orders: OrderEntity[];

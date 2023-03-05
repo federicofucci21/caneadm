@@ -1,16 +1,10 @@
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UserDto {
   readonly firstName: string;
   readonly lastName: string;
   readonly email: string;
-  readonly celphone: number;
+  readonly cell: string;
   readonly address: string;
   readonly isActive: boolean;
 }
@@ -29,8 +23,8 @@ export class UserDTO {
   email: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  celphone: number;
+  @IsString()
+  cell: string;
 
   @IsOptional()
   @IsString()
@@ -39,10 +33,6 @@ export class UserDTO {
   @IsOptional()
   @IsBoolean()
   isActive: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  isFunny: boolean;
 }
 
 export class UserUpdateDTO {
@@ -59,8 +49,8 @@ export class UserUpdateDTO {
   email: string;
 
   @IsOptional()
-  @IsNumber()
-  celphone: number;
+  @IsString()
+  cell: string;
 
   @IsOptional()
   @IsString()
@@ -69,8 +59,4 @@ export class UserUpdateDTO {
   @IsOptional()
   @IsBoolean()
   isActive: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  isFunny: boolean;
 }
