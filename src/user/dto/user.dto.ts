@@ -24,7 +24,7 @@ export class UserDTO {
   @IsString()
   lastName: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   email: string;
 
@@ -32,7 +32,7 @@ export class UserDTO {
   @IsNumber()
   celphone: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   address: string;
 

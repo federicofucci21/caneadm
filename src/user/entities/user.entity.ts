@@ -22,6 +22,9 @@ export class UserEntity extends BaseEntity {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column()
+  status: string;
+
   @OneToMany(() => OrderEntity, (order) => order.user)
   orders: OrderEntity[];
 }
