@@ -5,11 +5,11 @@ import { ProductEntity } from '../../product/entities/product.entity';
 
 @Entity({ name: 'order_details' })
 export class OrderDetailEntity extends BaseEntity {
-  @Column()
-  quantity: number;
+  // @Column()
+  // quantity: number;
 
-  @Column()
-  price: number;
+  // @Column()
+  // price: number;
 
   @ManyToOne(() => OrderEntity, (order) => order.orderDetailIncludes)
   order: OrderEntity;

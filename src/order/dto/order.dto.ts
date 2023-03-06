@@ -1,4 +1,6 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { OrderDetailEntity } from 'src/orderDetail/entities/orderDetail.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 
 export class OrderDto {
   readonly state: string;
@@ -14,4 +16,11 @@ export class OrderDTO {
   @IsOptional()
   @IsNumber()
   total: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  user: UserEntity;
+
+  @IsNumber()
+  orderDetailIncludes: OrderDetailEntity;
 }
