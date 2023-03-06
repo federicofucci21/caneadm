@@ -8,7 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-// import { OrderDetail } from '../orderDetail/orderDetail.model';
+import { ProductsForOrder } from '../helpers/productsForOrder';
 import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
@@ -46,34 +46,16 @@ export class UserController {
     return await this.userService.deleteUser(Number(id));
   }
 
-  // @Post(':id/cart')
-  // cartCreate2(
-  //   @Param('id') userId: number,
-  //   @Body() product: number,
-  // ): Promise<OrderDetail> {
-  //   return this.userService.cartCreate(userId, product);
-  // }
+  @Post('id/:id/order')
+  public async orderCreate(
+    @Param('id') id: string,
+    @Body() body: ProductsForOrder[],
+  ) {
+    return this.userService.orderCreate(Number(id), body);
+  }
 
-  // @Put(':id/cart')
-  // async cartUpdate2(
-  //   @Param('id') userId: number,
-  //   @Body() product: number,
-  // ): Promise<any> {
-  //   return await this.userService.cartUpdate(userId, product);
-  // }
-
-  // @Delete(':id/cart')
-  // async deleteOrder2(@Param('id') id: number): Promise<any> {
-  //   return await this.userService.deleteOrder(id);
-  // }
-
-  // @Get(':id/cart')
-  // async getAllItems2(@Param('id') id: number): Promise<object> {
-  //   return await this.userService.getAllItems(id);
-  // }
-
-  // @Delete(':id/cart/:productId')
-  // async delteItem2(@Param('productId') productId, @Body() orderId) {
-  //   return await this.userService.deleteItem(orderId, productId);
-  // }
+  @Get('id/:id/order')
+  public async getAllUserOrders(@Param('id') id: string) {
+    return this.userService.allUserOrders(Number(id));
+  }
 }

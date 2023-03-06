@@ -1,5 +1,11 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { OrderDetailEntity } from 'src/orderDetail/entities/orderDetail.entity';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { ProductsForOrder } from 'src/helpers/productsForOrder';
 import { UserEntity } from '../../user/entities/user.entity';
 
 export class OrderDto {
@@ -21,6 +27,7 @@ export class OrderDTO {
   @IsNumber()
   user: UserEntity;
 
-  @IsNumber()
-  orderDetailIncludes: OrderDetailEntity;
+  @IsNotEmpty()
+  @IsArray()
+  allProducts: Array<ProductsForOrder>;
 }

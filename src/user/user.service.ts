@@ -1,12 +1,18 @@
-import { UserDTO, UserUpdateDTO } from './dto/user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserDTO, UserUpdateDTO } from './dto/user.dto';
+import { UserEntity } from './entities/user.entity';
+import { OrderEntity } from '../order/entities/order.entity';
+import { OrderDTO } from '../order/dto/order.dto';
+import { ProductsForOrder } from '../helpers/productsForOrder';
+import { totalPrice } from '../helpers/total';
 
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(OrderEntity)
+    private readonly orderRepository: Repository<OrderEntity>,
   ) {}
 
   public async createUser(body: UserDTO): Promise<UserEntity> {
@@ -77,6 +83,31 @@ export class UserService {
     }
   }
 
+  public async orderCreate(userId: any, products: Array<ProductsForOrder>) {
+    try {
+      const order: OrderDTO = {
+        user: userId,
+        allProducts: products,
+        total: totalPrice(products),
+        state: 'open',
+      };
+
+      return this.orderRepository.save(order);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  public async allUserOrders(id: number): Promise<OrderEntity[]> {
+    try {
+      return this.orderRepository
+        .createQueryBuilder('orders')
+        .where({ user: id })
+        .getMany();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
   //   //Find or Create Order
   //   async cartCreate(userId, product) {
   //     const order = await this.orderRepository.findOrCreate({
