@@ -7,16 +7,16 @@ export class UserEntity extends BaseEntity {
   @Column()
   firstName: string;
 
-  @Column()
+  @Column({ default: 'cane' })
   lastName: string;
 
-  @Column()
+  @Column({ default: 'cane@cane.com' })
   email: string;
 
-  @Column()
+  @Column({ unique: true })
   cell: string;
 
-  @Column()
+  @Column({ default: 'casa 123' })
   address: string;
 
   @Column({ default: true })

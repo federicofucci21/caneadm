@@ -1,4 +1,6 @@
-import { IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
+import { ProductEntity } from '../../product/entities/product.entity';
+import { OrderEntity } from '../../order/entities/order.entity';
 
 export class OrderDetailDto {
   readonly quantity: number;
@@ -13,4 +15,12 @@ export class OrderDetailDTO {
 
   @IsNumber()
   price: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  order: OrderEntity;
+
+  @IsNotEmpty()
+  @IsNumber()
+  product: ProductEntity;
 }
