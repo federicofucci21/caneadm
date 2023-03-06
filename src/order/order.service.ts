@@ -1,7 +1,6 @@
-import { OrderDTO } from './dto/order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OrderEntity } from './entities/order.entity';
 import { Repository } from 'typeorm';
+import { OrderEntity } from './entities/order.entity';
 
 export class OrderService {
   constructor(
@@ -9,9 +8,9 @@ export class OrderService {
     private readonly orderRepository: Repository<OrderEntity>,
   ) {}
 
-  public async create(order: OrderDTO): Promise<OrderEntity> {
+  public async allOrders(): Promise<OrderEntity[]> {
     try {
-      return await this.orderRepository.save(order);
+      return await this.orderRepository.find();
     } catch (error) {
       throw new Error(error);
     }
