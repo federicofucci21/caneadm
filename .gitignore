@@ -4,7 +4,6 @@
 .env
 /package.json
 /package-lock.json
-/src/migrations
 
 # Logs
 logs
