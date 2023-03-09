@@ -16,12 +16,16 @@ export class OrderService {
     }
   }
 
-  public async findOneById(id: number): Promise<OrderEntity> {
+  public async findOneById(id: number): Promise<OrderEntity | string> {
     try {
-      return await this.orderRepository
+      const order = await this.orderRepository
         .createQueryBuilder('orders')
         .where({ id })
+        .leftJoinAndSelect('orders.user', 'user')
         .getOne();
+      return order
+        ? order
+        : `We don't have an order with identification ${id} on our database`;
     } catch (error) {
       throw new Error(error);
     }
