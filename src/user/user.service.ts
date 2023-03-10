@@ -4,13 +4,15 @@ import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { UserEntity } from './entities/user.entity';
 import { OrderEntity } from '../order/entities/order.entity';
 import { OrderDTO } from '../order/dto/order.dto';
-import { ProductsForOrder } from '../helpers/productsForOrder';
 import { totalPrice } from '../helpers/total';
+import { ProductsForOrderEntity } from '../order/entities/productOrder.entity';
 
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(ProductsForOrderEntity)
+    private readonly productOrderRepository: Repository<ProductsForOrderEntity>,
     @InjectRepository(OrderEntity)
     private readonly orderRepository: Repository<OrderEntity>,
   ) {}
@@ -83,11 +85,15 @@ export class UserService {
     }
   }
 
-  public async orderCreate(userId: any, products: Array<ProductsForOrder>) {
+  public async orderCreate(
+    userId: any,
+    products: Array<ProductsForOrderEntity>,
+  ) {
     try {
+      const allProds = await this.productOrderRepository.save(products);
       const order: OrderDTO = {
         user: userId,
-        allProducts: products,
+        productsForOrder: allProds,
         total: totalPrice(products),
         state: 'open',
       };
@@ -103,6 +109,8 @@ export class UserService {
       return this.orderRepository
         .createQueryBuilder('orders')
         .where({ user: id })
+        .leftJoinAndSelect('orders.productsForOrder', 'productsForOrder')
+        .leftJoinAndSelect('productsForOrder.product', 'product')
         .getMany();
     } catch (error) {
       throw new Error(error);

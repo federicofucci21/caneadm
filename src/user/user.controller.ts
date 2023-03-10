@@ -8,7 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ProductsForOrder } from '../helpers/productsForOrder';
+import { ProductsForOrderEntity } from '../order/entities/productOrder.entity';
 import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 
@@ -49,7 +49,7 @@ export class UserController {
   @Post('id/:id/order')
   public async orderCreate(
     @Param('id') id: string,
-    @Body() body: ProductsForOrder[],
+    @Body() body: ProductsForOrderEntity[],
   ) {
     return this.userService.orderCreate(Number(id), body);
   }
