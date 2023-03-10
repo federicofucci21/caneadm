@@ -27,6 +27,17 @@ export class ProviderService {
     }
   }
 
+  public async findOneByName(name: string): Promise<ProviderEntity> {
+    try {
+      return await this.providerRepository
+        .createQueryBuilder('providers')
+        .where({ name })
+        .getOne();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   public async getById(id: number): Promise<ProviderEntity> {
     try {
       return await this.providerRepository
