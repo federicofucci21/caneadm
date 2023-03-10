@@ -24,7 +24,7 @@ xdescribe('UserController', () => {
     controller = module.get<UserController>(UserController);
   });
 
-  it('should be defined', () => {
+  xit('should be defined', () => {
     expect(controller).toBeDefined();
   });
 });
