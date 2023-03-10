@@ -5,8 +5,8 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { ProductsForOrder } from 'src/helpers/productsForOrder';
 import { UserEntity } from '../../user/entities/user.entity';
+import { ProductsForOrderEntity } from '../entities/productOrder.entity';
 
 export class OrderDto {
   readonly state: string;
@@ -29,5 +29,23 @@ export class OrderDTO {
 
   @IsNotEmpty()
   @IsArray()
-  allProducts: Array<ProductsForOrder>;
+  productsForOrder: Array<ProductsForOrderEntity>;
+}
+
+export class OrderUpdateDTO {
+  @IsOptional()
+  @IsString()
+  state: string;
+
+  @IsOptional()
+  @IsNumber()
+  total: number;
+
+  @IsOptional()
+  @IsNumber()
+  user: UserEntity;
+
+  @IsOptional()
+  @IsArray()
+  productsForOrder: Array<ProductsForOrderEntity>;
 }

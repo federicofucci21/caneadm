@@ -1,7 +1,7 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 import { BaseEntity } from '../../config/base.entity';
-import { ProductsForOrder } from '../../helpers/productsForOrder';
+import { ProductsForOrderEntity } from './productOrder.entity';
 
 @Entity({ name: 'orders' })
 export class OrderEntity extends BaseEntity {
@@ -11,9 +11,12 @@ export class OrderEntity extends BaseEntity {
   @Column({ default: 0 })
   total: number;
 
-  @Column('simple-array')
-  allProducts: ProductsForOrder[];
-
   @ManyToOne(() => UserEntity, (user) => user.orders)
   user: UserEntity;
+
+  @OneToMany(
+    () => ProductsForOrderEntity,
+    (prodOrder) => prodOrder.orderInclude,
+  )
+  productsForOrder: ProductsForOrderEntity[];
 }

@@ -1,4 +1,4 @@
-import { ProductsForOrder } from './productsForOrder';
+import { ProductsForOrderEntity } from '../order/entities/productOrder.entity';
 
 export function totalCalculator(
   quantity: number,
@@ -8,6 +8,6 @@ export function totalCalculator(
   return lastTotal + quantity * price;
 }
 
-export const totalPrice = (prod: Array<ProductsForOrder>) => {
-  return prod.reduce((acc, cur) => acc + cur.products.price * cur.quantity, 0);
+export const totalPrice = (prod: Array<ProductsForOrderEntity>) => {
+  return prod.reduce((acc, cur) => acc + cur.product.price * cur.quantity, 0);
 };
