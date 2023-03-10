@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
-import { Body, Get, Param, Post } from '@nestjs/common/decorators';
-import { ProviderDTO } from './dto/provider.dto';
+import { Body, Get, Param, Post, Put } from '@nestjs/common/decorators';
+import { ProviderDTO, ProviderUpdateDTO } from './dto/provider.dto';
 import { ProviderService } from './provider.service';
 
 @Controller('provider')
@@ -20,5 +20,13 @@ export class ProviderController {
   @Post()
   public async createUser(@Body() body: ProviderDTO) {
     return await this.providerService.createProvider(body);
+  }
+
+  @Put('id/:id')
+  public async editProvider(
+    @Param('id') id: string,
+    @Body() body: ProviderUpdateDTO,
+  ) {
+    return await this.providerService.updateProvider(Number(id), body);
   }
 }
