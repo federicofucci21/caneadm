@@ -5,6 +5,7 @@ import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceConfig } from './config/data.source';
+import { ProviderModule } from './provider/provider.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { DataSourceConfig } from './config/data.source';
     UserModule,
     ProductModule,
     OrderModule,
+    ProviderModule,
   ],
 })
 export class AppModule {}

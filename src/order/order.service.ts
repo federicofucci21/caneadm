@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { totalPrice } from 'src/helpers/total';
+import { totalPrice } from '../helpers/total';
 import { Repository, UpdateResult } from 'typeorm';
 import { OrderUpdateDTO } from './dto/order.dto';
 import { OrderEntity } from './entities/order.entity';
