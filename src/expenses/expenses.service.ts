@@ -30,4 +30,22 @@ export class ExpensesService {
       throw new Error(error);
     }
   }
+  public async findExpenses(): Promise<ExpensesEntity[]> {
+    try {
+      return await this.expensesRepository.find();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  public async findOneById(id: number): Promise<ExpensesEntity> {
+    try {
+      return await this.expensesRepository
+        .createQueryBuilder('expenses')
+        .where({ id })
+        .getOne();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }

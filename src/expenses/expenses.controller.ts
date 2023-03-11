@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { Body, Param, Post } from '@nestjs/common/decorators';
+import { Body, Get, Param, Post } from '@nestjs/common/decorators';
 // import { ExpensesEntity } from './entities/expenses.entity';
 import { ExpensesService } from './expenses.service';
 
@@ -12,5 +12,15 @@ export class ExpensesController {
     console.log('BODY', body);
     console.log('ID', id);
     return this.expensesService.createExpenses(body, Number(id));
+  }
+
+  @Get()
+  public async getAllProviders() {
+    return await this.expensesService.findExpenses();
+  }
+
+  @Get('id/:id')
+  public async getExpensesById(@Param('id') id: string) {
+    return await this.expensesService.findOneById(Number(id));
   }
 }
