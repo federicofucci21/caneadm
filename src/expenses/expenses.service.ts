@@ -48,4 +48,15 @@ export class ExpensesService {
       throw new Error(error);
     }
   }
+
+  public async findProvidersExpenses(id: number): Promise<ExpensesEntity[]> {
+    try {
+      return await this.expensesRepository
+        .createQueryBuilder('expenses')
+        .where({ provider: id })
+        .getMany();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }

@@ -23,4 +23,9 @@ export class ExpensesController {
   public async getExpensesById(@Param('id') id: string) {
     return await this.expensesService.findOneById(Number(id));
   }
+
+  @Get('id/:id/provider')
+  public async getAllUserOrders(@Param('id') id: string) {
+    return this.expensesService.findProvidersExpenses(Number(id));
+  }
 }
