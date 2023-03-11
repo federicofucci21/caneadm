@@ -18,7 +18,7 @@ export class ProviderController {
   }
 
   @Get('name')
-  public async getProviderByVame(@Query('name') name: string) {
+  public async getProviderByName(@Query('name') name: string) {
     return await this.providerService.findOneByName(name);
   }
 
