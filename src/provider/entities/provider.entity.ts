@@ -1,4 +1,5 @@
-import { Column, Entity } from 'typeorm';
+import { ExpensesEntity } from '../../expenses/entities/expenses.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 
 @Entity({ name: 'providers' })
@@ -9,6 +10,6 @@ export class ProviderEntity extends BaseEntity {
   @Column({ unique: true })
   cell: string;
 
-  //   @ManyToOne(() => ExpensesEntity, (expenses) => expenses.provider)
-  //   expenses: ExpensesEntity[];
+  @OneToMany(() => ExpensesEntity, (expenses) => expenses.provider)
+  expenses: ExpensesEntity[];
 }
