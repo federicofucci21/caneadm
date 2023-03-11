@@ -8,6 +8,7 @@ import { DataSourceConfig } from './config/data.source';
 import { ProviderModule } from './provider/provider.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { IncomeModule } from './income/income.module';
+import { OutgoModule } from './outgo/outgo.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { IncomeModule } from './income/income.module';
     ProviderModule,
     ExpensesModule,
     IncomeModule,
+    OutgoModule,
   ],
 })
 export class AppModule {}
