@@ -1,4 +1,5 @@
-import { Column, Entity } from 'typeorm';
+import { ProviderEntity } from '../../provider/entities/provider.entity';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 
 @Entity({ name: 'expenses' })
@@ -12,6 +13,7 @@ export class ExpensesEntity extends BaseEntity {
   @Column()
   date: Date;
 
-  //   @ManyToOne(() => ExpensesEntity, (expenses) => expenses.provider)
-  //   expenses: ExpensesEntity[];
+  @OneToOne(() => ProviderEntity)
+  @JoinColumn()
+  provider: ProviderEntity;
 }

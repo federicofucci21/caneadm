@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { ProviderEntity } from 'src/provider/entities/provider.entity';
 
 export class ExpensesDto {
   readonly amount: number;
@@ -24,6 +25,10 @@ export class ExpensesDTO {
   @IsNotEmpty()
   @IsDate()
   date: Date;
+
+  @IsNotEmpty()
+  @IsNumber()
+  provider: ProviderEntity;
 }
 
 export class ExpensesUpdateDTO {
@@ -38,4 +43,8 @@ export class ExpensesUpdateDTO {
   @IsNotEmpty()
   @IsDate()
   date: Date;
+
+  @IsNotEmpty()
+  @IsNumber()
+  provider: ProviderEntity;
 }
