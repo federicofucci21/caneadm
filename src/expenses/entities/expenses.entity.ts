@@ -1,6 +1,7 @@
 import { ProviderEntity } from '../../provider/entities/provider.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
+import { WeekEntity } from '../../week/entities/week.entity';
 
 @Entity({ name: 'expenses' })
 export class ExpensesEntity extends BaseEntity {
@@ -15,4 +16,7 @@ export class ExpensesEntity extends BaseEntity {
 
   @ManyToOne(() => ProviderEntity, (provider) => provider.expenses)
   provider: ProviderEntity;
+
+  @ManyToOne(() => WeekEntity, (week) => week.expenses)
+  week: WeekEntity;
 }
