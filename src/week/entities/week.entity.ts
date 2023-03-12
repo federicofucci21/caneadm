@@ -1,14 +1,10 @@
+import { Column, Entity, OneToMany } from 'typeorm';
 import { ExpensesEntity } from '../../expenses/entities/expenses.entity';
 import { IncomeEntity } from '../../income/entities/income.entity';
 import { OrderEntity } from '../../order/entities/order.entity';
 import { OutgoEntity } from '../../outgo/entities/outgo.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
-
-export enum WeekState {
-  OPEN = 'open',
-  CLOSE = 'close',
-}
+import { WEEKSTATE } from '../../constants/weekState';
 
 @Entity({ name: 'weeks' })
 export class WeekEntity extends BaseEntity {
@@ -26,10 +22,10 @@ export class WeekEntity extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: WeekState,
-    default: WeekState.OPEN,
+    enum: WEEKSTATE,
+    default: WEEKSTATE.OPEN,
   })
-  status: WeekState;
+  status: WEEKSTATE;
 
   @OneToMany(() => OrderEntity, (order) => order.week)
   order: OrderEntity[];

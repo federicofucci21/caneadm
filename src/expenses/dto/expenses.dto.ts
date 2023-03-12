@@ -5,13 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { ProviderEntity } from 'src/provider/entities/provider.entity';
-
-export class ExpensesDto {
-  readonly amount: number;
-  readonly detail: string;
-  readonly date: Date;
-}
+import { ProviderEntity } from '../../provider/entities/provider.entity';
 
 export class ExpensesDTO {
   @IsNotEmpty()

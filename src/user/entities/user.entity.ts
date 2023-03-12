@@ -1,11 +1,7 @@
 import { Column, Entity, OneToMany } from 'typeorm';
+import { USERSROLE } from '../../constants/roles';
 import { BaseEntity } from '../../config/base.entity';
 import { OrderEntity } from '../../order/entities/order.entity';
-
-export enum UserRole {
-  CLIENT = 'client',
-  LOCAL = 'local',
-}
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
@@ -29,10 +25,10 @@ export class UserEntity extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: UserRole,
-    default: UserRole.CLIENT,
+    enum: USERSROLE,
+    default: USERSROLE.CLIENT,
   })
-  role: UserRole;
+  role: USERSROLE;
 
   @OneToMany(() => OrderEntity, (order) => order.user)
   orders: OrderEntity[];

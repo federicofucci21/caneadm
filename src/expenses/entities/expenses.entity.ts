@@ -1,5 +1,5 @@
-import { ProviderEntity } from '../../provider/entities/provider.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
+import { ProviderEntity } from '../../provider/entities/provider.entity';
 import { BaseEntity } from '../../config/base.entity';
 import { WeekEntity } from '../../week/entities/week.entity';
 
