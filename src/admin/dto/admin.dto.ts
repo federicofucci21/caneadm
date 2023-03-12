@@ -1,12 +1,11 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { AdminRole } from '../entities/admin.entity';
-
-export class AdminDto {
-  readonly firstName: string;
-  readonly lastName: string;
-  readonly role: AdminRole;
-  readonly isActive: boolean;
-}
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { ADMINROLE } from '../../constants/roles';
 
 export class AdminDTO {
   @IsNotEmpty()
@@ -17,9 +16,17 @@ export class AdminDTO {
   @IsString()
   lastName: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  role: AdminRole;
+  username: string;
+
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+
+  @IsOptional()
+  @IsEnum(ADMINROLE)
+  role: ADMINROLE;
 
   @IsOptional()
   @IsBoolean()
@@ -37,7 +44,15 @@ export class AdminUpdateDTO {
 
   @IsOptional()
   @IsString()
-  role: AdminRole;
+  username: string;
+
+  @IsOptional()
+  @IsString()
+  password: string;
+
+  @IsOptional()
+  @IsEnum(ADMINROLE)
+  role: ADMINROLE;
 
   @IsOptional()
   @IsBoolean()

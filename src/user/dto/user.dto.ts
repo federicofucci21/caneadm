@@ -1,15 +1,11 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { UserRole } from '../entities/user.entity';
-
-export class UserDto {
-  readonly firstName: string;
-  readonly lastName: string;
-  readonly email: string;
-  readonly cell: string;
-  readonly address: string;
-  readonly isActive: boolean;
-  readonly role: UserRole;
-}
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { USERSROLE } from '../../constants/roles';
 
 export class UserDTO {
   @IsNotEmpty()
@@ -37,8 +33,8 @@ export class UserDTO {
   isActive: boolean;
 
   @IsOptional()
-  @IsString()
-  role: UserRole;
+  @IsEnum(USERSROLE)
+  role: USERSROLE;
 }
 
 export class UserUpdateDTO {
@@ -67,6 +63,6 @@ export class UserUpdateDTO {
   isActive: boolean;
 
   @IsOptional()
-  @IsString()
-  role: UserRole;
+  @IsEnum(USERSROLE)
+  role: USERSROLE;
 }

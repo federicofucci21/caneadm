@@ -6,12 +6,6 @@ import {
   IsString,
 } from 'class-validator';
 
-export class IncomeDto {
-  readonly amount: number;
-  readonly detail: string;
-  readonly date: Date;
-}
-
 export class IncomeDTO {
   @IsNotEmpty()
   @IsNumber()
@@ -27,7 +21,7 @@ export class IncomeDTO {
 }
 
 export class IncomeUpdateDTO {
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   amount: number;
 
@@ -35,7 +29,7 @@ export class IncomeUpdateDTO {
   @IsString()
   detail: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDate()
   date: Date;
 }

@@ -1,5 +1,5 @@
-import { ExpensesEntity } from '../../expenses/entities/expenses.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { ExpensesEntity } from '../../expenses/entities/expenses.entity';
 import { BaseEntity } from '../../config/base.entity';
 
 @Entity({ name: 'providers' })

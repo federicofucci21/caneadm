@@ -1,10 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class ProviderDto {
-  readonly name: string;
-  readonly cell: string;
-}
-
 export class ProviderDTO {
   @IsNotEmpty()
   @IsString()

@@ -1,5 +1,5 @@
-import { WeekEntity } from '../../week/entities/week.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
+import { WeekEntity } from '../../week/entities/week.entity';
 import { BaseEntity } from '../../config/base.entity';
 
 @Entity({ name: 'outgoes' })

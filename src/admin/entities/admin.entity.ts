@@ -1,10 +1,6 @@
 import { Column, Entity } from 'typeorm';
+import { ADMINROLE } from '../../constants/roles';
 import { BaseEntity } from '../../config/base.entity';
-
-export enum AdminRole {
-  ADMIN = 'admin',
-  SUPERADMIN = 'superadmin',
-}
 
 @Entity({ name: 'admins' })
 export class AdminEntity extends BaseEntity {
@@ -14,12 +10,18 @@ export class AdminEntity extends BaseEntity {
   @Column()
   lastName: string;
 
+  @Column()
+  username: string;
+
+  @Column()
+  password: string;
+
   @Column({
     type: 'enum',
-    enum: AdminRole,
-    default: AdminRole.ADMIN,
+    enum: ADMINROLE,
+    default: ADMINROLE.ADMIN,
   })
-  role: AdminRole;
+  role: ADMINROLE;
 
   @Column({ default: true })
   isActive: boolean;

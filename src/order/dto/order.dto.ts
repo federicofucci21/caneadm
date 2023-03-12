@@ -8,12 +8,6 @@ import {
 import { UserEntity } from '../../user/entities/user.entity';
 import { ProductsForOrderEntity } from '../entities/productOrder.entity';
 
-export class OrderDto {
-  readonly state: string;
-  readonly total: number;
-  readonly userId: number;
-}
-
 export class OrderDTO {
   @IsOptional()
   @IsString()
