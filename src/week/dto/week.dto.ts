@@ -30,7 +30,7 @@ export class WeekDTO {
   status: string;
 }
 
-export class IncomeUpdateDTO {
+export class WeekUpdateDTO {
   @IsNotEmpty()
   @IsString()
   name: string;
