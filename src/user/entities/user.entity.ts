@@ -2,6 +2,11 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 import { OrderEntity } from '../../order/entities/order.entity';
 
+export enum UserRole {
+  CLIENT = 'client',
+  LOCAL = 'local',
+}
+
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
   @Column()
@@ -21,6 +26,13 @@ export class UserEntity extends BaseEntity {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.CLIENT,
+  })
+  role: UserRole;
 
   @OneToMany(() => OrderEntity, (order) => order.user)
   orders: OrderEntity[];

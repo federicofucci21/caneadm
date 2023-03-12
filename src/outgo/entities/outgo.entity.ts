@@ -1,4 +1,5 @@
-import { Column, Entity } from 'typeorm';
+import { WeekEntity } from '../../week/entities/week.entity';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../config/base.entity';
 
 @Entity({ name: 'outgoes' })
@@ -11,4 +12,7 @@ export class OutgoEntity extends BaseEntity {
 
   @Column()
   date: Date;
+
+  @ManyToOne(() => WeekEntity, (week) => week.outgo)
+  week: WeekEntity;
 }

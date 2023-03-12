@@ -9,6 +9,8 @@ import { ProviderModule } from './provider/provider.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { IncomeModule } from './income/income.module';
 import { OutgoModule } from './outgo/outgo.module';
+import { WeekModule } from './week/week.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { OutgoModule } from './outgo/outgo.module';
     ExpensesModule,
     IncomeModule,
     OutgoModule,
+    WeekModule,
+    AdminModule,
   ],
 })
 export class AppModule {}
