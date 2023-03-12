@@ -6,6 +6,7 @@ import { OrderEntity } from '../order/entities/order.entity';
 import { OrderDTO } from '../order/dto/order.dto';
 import { totalPrice } from '../helpers/total';
 import { ProductsForOrderEntity } from '../order/entities/productOrder.entity';
+import { WeekService } from '../week/week.service';
 
 export class UserService {
   constructor(
@@ -15,6 +16,7 @@ export class UserService {
     private readonly productOrderRepository: Repository<ProductsForOrderEntity>,
     @InjectRepository(OrderEntity)
     private readonly orderRepository: Repository<OrderEntity>,
+    private readonly weekService: WeekService,
   ) {}
 
   public async createUser(body: UserDTO): Promise<UserEntity> {
@@ -85,17 +87,19 @@ export class UserService {
     }
   }
 
-  public async orderCreate(
-    userId: any,
-    products: Array<ProductsForOrderEntity>,
-  ) {
+  public async orderCreate(userId, products: Array<ProductsForOrderEntity>) {
     try {
-      const allProds = await this.productOrderRepository.save(products);
+      const weekOpen = await this.weekService.findOpenWeek();
+      if (!weekOpen) {
+        return "We don't have an open week, please open one";
+      }
+
+      const allProds = this.productOrderRepository.create(products);
       const order: OrderDTO = {
         user: userId,
         productsForOrder: allProds,
         total: totalPrice(products),
-        state: 'open',
+        week: weekOpen,
       };
 
       return this.orderRepository.save(order);
@@ -116,92 +120,4 @@ export class UserService {
       throw new Error(error);
     }
   }
-  //   //Find or Create Order
-  //   async cartCreate(userId, product) {
-  //     const order = await this.orderRepository.findOrCreate({
-  //       where: { userId: userId, state: 'open' },
-  //     });
-  //     console.log('ORDER', order);
-  //     const priceProduct = await this.productRepository.findByPk(
-  //       product.productId,
-  //     );
-  //     const updateOrder = await this.orderRepository.findByPk(
-  //       order[0].dataValues.id,
-  //     );
-  //     const totalPrice = totalCalculator(
-  //       product.quantity,
-  //       priceProduct.price,
-  //       updateOrder.total,
-  //     );
-  //     await updateOrder.update({
-  //       total: totalPrice,
-  //     });
-
-  //     return await this.orderDetailRepository.create({
-  //       quantity: product.quantity,
-  //       orderId: order[0].dataValues.id,
-  //       productId: product.productId,
-  //     });
-  //   }
-
-  //   //Update item quantity
-  //   async cartUpdate(userId, product) {
-  //     const order = await this.orderRepository.findOne({
-  //       where: {
-  //         userId: userId,
-  //         state: 'open',
-  //       },
-  //     });
-  //     const orderDetail = await this.orderDetailRepository.findOne({
-  //       where: {
-  //         orderId: order.id,
-  //         productId: product.productId,
-  //       },
-  //     });
-  //     orderDetail.quantity = product.quantity;
-  //     return orderDetail.save();
-  //   }
-
-  //   //Delete Order
-  //   async deleteOrder(id: number) {
-  //     return await Order.destroy({
-  //       where: { userId: id, state: 'open' },
-  //     });
-  //   }
-
-  //   //Get all Order's Item
-  //   async getAllItems(id: number) {
-  //     let object = {};
-  //     const order = await Order.findOne({
-  //       where: {
-  //         userId: id,
-  //         state: 'open',
-  //       },
-  //       include: [
-  //         { model: Product, as: 'products' },
-  //         { model: User, as: 'user' },
-  //       ],
-  //     });
-  //     if (order) {
-  //       const orderDetail = await OrderDetail.findAll({
-  //         where: {
-  //           orderId: order.dataValues.id,
-  //         },
-  //       });
-  //       object = {
-  //         orderId: order.dataValues.id,
-  //         products: order.dataValues.products,
-  //         orderDetail,
-  //       };
-  //     }
-  //     return object;
-  //   }
-
-  //   async deleteItem(orderId, productId) {
-  //     console.log('productID', productId);
-  //     console.log('orderId', orderId);
-  //     return OrderDetail.destroy({
-  //       where: { orderId: orderId.orderId, productId: productId },
-  //     });
-  //   }
 }

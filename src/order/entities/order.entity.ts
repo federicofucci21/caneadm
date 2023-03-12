@@ -3,11 +3,12 @@ import { UserEntity } from '../../user/entities/user.entity';
 import { BaseEntity } from '../../config/base.entity';
 import { ProductsForOrderEntity } from './productOrder.entity';
 import { WeekEntity } from '../../week/entities/week.entity';
+import { ORDERSTATE } from '../../constants/order';
 
 @Entity({ name: 'orders' })
 export class OrderEntity extends BaseEntity {
-  @Column({ default: 'open' })
-  state: string;
+  @Column({ type: 'enum', enum: ORDERSTATE, default: ORDERSTATE.OPEN })
+  state: ORDERSTATE;
 
   @Column({ default: 0 })
   total: number;

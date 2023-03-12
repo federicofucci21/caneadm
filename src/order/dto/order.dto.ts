@@ -1,18 +1,16 @@
 import {
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsString,
 } from 'class-validator';
+import { ORDERSTATE } from 'src/constants/order';
+import { WeekEntity } from 'src/week/entities/week.entity';
 import { UserEntity } from '../../user/entities/user.entity';
 import { ProductsForOrderEntity } from '../entities/productOrder.entity';
 
 export class OrderDTO {
-  @IsOptional()
-  @IsString()
-  state: string;
-
   @IsOptional()
   @IsNumber()
   total: number;
@@ -24,12 +22,16 @@ export class OrderDTO {
   @IsNotEmpty()
   @IsArray()
   productsForOrder: Array<ProductsForOrderEntity>;
+
+  @IsNotEmpty()
+  @IsNumber()
+  week: WeekEntity;
 }
 
 export class OrderUpdateDTO {
   @IsOptional()
-  @IsString()
-  state: string;
+  @IsEnum(ORDERSTATE)
+  state: ORDERSTATE;
 
   @IsOptional()
   @IsNumber()

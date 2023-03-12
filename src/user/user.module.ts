@@ -2,24 +2,23 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsForOrderEntity } from '../order/entities/productOrder.entity';
 import { OrderEntity } from '../order/entities/order.entity';
-import { orderProviders } from '../order/order.providers';
-import { productProviders } from '../product/product.provider';
 import { UserEntity } from './entities/user.entity';
 import { UserController } from './user.controller';
-import { userProviders } from './user.providers';
 import { UserService } from './user.service';
+import { WeekEntity } from '../week/entities/week.entity';
+import { WeekService } from '../week/week.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, OrderEntity, ProductsForOrderEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      OrderEntity,
+      ProductsForOrderEntity,
+      WeekEntity,
+    ]),
   ],
   controllers: [UserController],
-  providers: [
-    UserService,
-    ...userProviders,
-    ...productProviders,
-    ...orderProviders,
-  ],
+  providers: [UserService, WeekService],
   exports: [UserService],
 })
 export class UserModule {}

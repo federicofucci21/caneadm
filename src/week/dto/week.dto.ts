@@ -1,12 +1,11 @@
-import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-
-export class WeekDto {
-  readonly name: string;
-  readonly detail: string;
-  readonly open: Date;
-  readonly close: Date;
-  readonly status: string;
-}
+import {
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { WEEKSTATE } from '../../constants/weekState';
 
 export class WeekDTO {
   @IsNotEmpty()
@@ -26,12 +25,12 @@ export class WeekDTO {
   close: Date;
 
   @IsOptional()
-  @IsString()
-  status: string;
+  @IsEnum(WEEKSTATE)
+  status: WEEKSTATE;
 }
 
 export class WeekUpdateDTO {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   name: string;
 
@@ -39,7 +38,7 @@ export class WeekUpdateDTO {
   @IsString()
   detail: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDate()
   open: Date;
 
@@ -48,6 +47,6 @@ export class WeekUpdateDTO {
   close: Date;
 
   @IsOptional()
-  @IsString()
-  status: string;
+  @IsEnum(WEEKSTATE)
+  status: WEEKSTATE;
 }
