@@ -22,11 +22,11 @@ export class WeekDTO {
   open: Date;
 
   @IsOptional()
-  @IsString()
+  @IsDate()
   close: Date;
 
   @IsOptional()
-  @IsDate()
+  @IsString()
   status: string;
 }
 
@@ -44,10 +44,10 @@ export class IncomeUpdateDTO {
   open: Date;
 
   @IsOptional()
-  @IsString()
+  @IsDate()
   close: Date;
 
   @IsOptional()
-  @IsDate()
+  @IsString()
   status: string;
 }
