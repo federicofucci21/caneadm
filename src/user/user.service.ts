@@ -94,7 +94,7 @@ export class UserService {
         return "We don't have an open week, please open one";
       }
 
-      const allProds = this.productOrderRepository.create(products);
+      const allProds = await this.productOrderRepository.save(products);
       const order: OrderDTO = {
         user: userId,
         productsForOrder: allProds,
