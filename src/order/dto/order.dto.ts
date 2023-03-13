@@ -5,8 +5,8 @@ import {
   IsNumber,
   IsOptional,
 } from 'class-validator';
-import { ORDERSTATE } from 'src/constants/order';
-import { WeekEntity } from 'src/week/entities/week.entity';
+import { ORDERSTATE } from '../../constants/order';
+import { WeekEntity } from '../../week/entities/week.entity';
 import { UserEntity } from '../../user/entities/user.entity';
 import { ProductsForOrderEntity } from '../entities/productOrder.entity';
 
