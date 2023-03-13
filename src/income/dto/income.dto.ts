@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { WeekEntity } from '../../week/entities/week.entity';
 
 export class IncomeDTO {
   @IsNotEmpty()
@@ -18,6 +19,10 @@ export class IncomeDTO {
   @IsNotEmpty()
   @IsDate()
   date: Date;
+
+  @IsNotEmpty()
+  @IsNumber()
+  week: WeekEntity;
 }
 
 export class IncomeUpdateDTO {
