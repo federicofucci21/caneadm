@@ -16,29 +16,34 @@ export class WeekController {
 
   @Get()
   public async allWeek() {
-    return this.weekService.allWeeks();
+    return await this.weekService.allWeeks();
   }
 
   @Get('id/:id')
   public async weekById(@Param('id') id: string) {
-    return this.weekService.getWeekById(Number(id));
+    return await this.weekService.getWeekById(Number(id));
   }
 
   @Post()
   public async openWeek(@Body() body: WeekDTO) {
-    return this.weekService.weekCreate(body);
+    return await this.weekService.weekCreate(body);
   }
 
   @Put('id/:id')
-  public async closeOpenWeek(
+  public async editOpenWeek(
     @Param('id') id: string,
     @Body() body: WeekUpdateDTO,
   ) {
-    return this.weekService.updateWeek(Number(id), body);
+    return await this.weekService.updateWeek(Number(id), body);
+  }
+
+  @Put('id/:id/close')
+  public async closeOpenWeek(@Param('id') id: string) {
+    return await this.weekService.closeWeek(Number(id));
   }
 
   @Delete('id/:id')
   public async del(@Param('id') id) {
-    return this.weekService.deleteWeek(id);
+    return await this.weekService.deleteWeek(id);
   }
 }

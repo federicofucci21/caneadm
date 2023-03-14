@@ -57,16 +57,16 @@ export class UserService {
     }
   }
 
-  public async deleteUser(id: number): Promise<UpdateResult | undefined> {
+  public async deleteUser(id: number): Promise<UserEntity | string> {
     try {
       const user: UpdateResult = await this.userRepository.update(id, {
         isActive: false,
       });
 
       if (user.affected === 0) {
-        return undefined;
+        return `The user with identification ${id} doesn't found on database`;
       }
-      return user;
+      return await this.getById(id);
     } catch (error) {
       throw new Error(error);
     }
@@ -75,19 +75,22 @@ export class UserService {
   public async updateUser(
     id: number,
     body: UserUpdateDTO,
-  ): Promise<UpdateResult | undefined> {
+  ): Promise<UserEntity | string> {
     try {
       const user: UpdateResult = await this.userRepository.update(id, body);
       if (user.affected === 0) {
-        return undefined;
+        return `The user with identification ${id} doesn't found on database`;
       }
-      return user;
+      return await this.getById(id);
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  public async orderCreate(userId, products: Array<ProductsForOrderEntity>) {
+  public async orderCreate(
+    userId,
+    products: Array<ProductsForOrderEntity>,
+  ): Promise<OrderEntity | string> {
     try {
       const weekOpen = await this.weekService.findOpenWeek();
       if (!weekOpen) {
@@ -102,7 +105,7 @@ export class UserService {
         week: weekOpen,
       };
 
-      return this.orderRepository.save(order);
+      return await this.orderRepository.save(order);
     } catch (error) {
       throw new Error(error);
     }
@@ -110,7 +113,7 @@ export class UserService {
 
   public async allUserOrders(id: number): Promise<OrderEntity[]> {
     try {
-      return this.orderRepository
+      return await this.orderRepository
         .createQueryBuilder('orders')
         .where({ user: id })
         .leftJoinAndSelect('orders.productsForOrder', 'productsForOrder')
