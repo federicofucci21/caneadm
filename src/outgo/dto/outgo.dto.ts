@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { WeekEntity } from '../../week/entities/week.entity';
 
 export class OutgoDTO {
   @IsNotEmpty()
@@ -15,9 +16,13 @@ export class OutgoDTO {
   @IsString()
   detail: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDate()
   date: Date;
+
+  @IsOptional()
+  @IsNumber()
+  week: WeekEntity;
 }
 
 export class OutgoUpdateDTO {

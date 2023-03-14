@@ -14,7 +14,7 @@ export class IncomeController {
 
   @Get('id/:id')
   public async getIncomeByPk(@Param('id') id: string) {
-    return this.incomeService.findIncomeById(Number(id));
+    return await this.incomeService.findIncomeById(Number(id));
   }
 
   @Post()
@@ -27,6 +27,6 @@ export class IncomeController {
     @Param('id') id: string,
     @Body() body: IncomeUpdateDTO,
   ) {
-    return this.incomeService.updateIncome(Number(id), body);
+    return await this.incomeService.updateIncome(Number(id), body);
   }
 }

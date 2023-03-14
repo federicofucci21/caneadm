@@ -14,7 +14,7 @@ export class OrderController {
 
   @Get('id/:id')
   public async getOrderById(@Param('id') id: string) {
-    return this.orderService.findOneById(Number(id));
+    return await this.orderService.findOneById(Number(id));
   }
 
   @Put('id/:id')
@@ -22,7 +22,7 @@ export class OrderController {
     @Param('id') id: string,
     @Body() body: Array<ProductsForOrderEntity>,
   ) {
-    return this.orderService.updateOrder(Number(id), body);
+    return await this.orderService.updateOrder(Number(id), body);
   }
 
   @Put('id/:id/state')
@@ -30,6 +30,6 @@ export class OrderController {
     @Param('id') id: string,
     @Body() body: OrderUpdateDTO,
   ) {
-    return this.orderService.updateStateOrder(Number(id), body);
+    return await this.orderService.updateStateOrder(Number(id), body);
   }
 }

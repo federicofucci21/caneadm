@@ -38,7 +38,10 @@ export class OrderService {
     }
   }
 
-  public async updateOrder(id, body: Array<ProductsForOrderEntity>) {
+  public async updateOrder(
+    id,
+    body: Array<ProductsForOrderEntity>,
+  ): Promise<OrderEntity | string> {
     try {
       const order: OrderEntity = await this.orderRepository
         .createQueryBuilder('orders')
@@ -61,7 +64,7 @@ export class OrderService {
         total: totalPrice(body),
       };
 
-      return this.orderRepository.save(newOrder);
+      return await this.orderRepository.save(newOrder);
     } catch (error) {
       throw new Error(error);
     }
@@ -70,7 +73,7 @@ export class OrderService {
   public async updateStateOrder(
     id: number,
     body: OrderUpdateDTO,
-  ): Promise<UpdateResult | string> {
+  ): Promise<OrderEntity | string> {
     try {
       const order: UpdateResult = await this.orderRepository.update(id, body);
 
@@ -78,7 +81,7 @@ export class OrderService {
         return `Order number ${id} doesn't found`;
       }
 
-      return order;
+      return await this.findOneById(id);
     } catch (error) {
       throw new Error(error);
     }

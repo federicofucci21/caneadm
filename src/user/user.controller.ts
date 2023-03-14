@@ -51,11 +51,11 @@ export class UserController {
     @Param('id') id: string,
     @Body() body: ProductsForOrderEntity[],
   ) {
-    return this.userService.orderCreate(Number(id), body);
+    return await this.userService.orderCreate(Number(id), body);
   }
 
   @Get('id/:id/order')
   public async getAllUserOrders(@Param('id') id: string) {
-    return this.userService.allUserOrders(Number(id));
+    return await this.userService.allUserOrders(Number(id));
   }
 }

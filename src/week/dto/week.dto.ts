@@ -16,7 +16,7 @@ export class WeekDTO {
   @IsString()
   detail: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDate()
   open: Date;
 

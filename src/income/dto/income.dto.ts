@@ -16,11 +16,11 @@ export class IncomeDTO {
   @IsString()
   detail: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDate()
   date: Date;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   week: WeekEntity;
 }

@@ -17,7 +17,7 @@ export class WeekEntity extends BaseEntity {
   @Column()
   open: Date;
 
-  @Column()
+  @Column({ nullable: true, default: undefined })
   close: Date;
 
   @Column({

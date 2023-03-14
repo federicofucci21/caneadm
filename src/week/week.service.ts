@@ -58,7 +58,24 @@ export class WeekService {
         return 'You have an open week, please close it';
       }
 
-      return this.weekRepository.save(body);
+      return this.weekRepository.save({ ...body, open: new Date(), close: '' });
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  public async closeWeek(id: number): Promise<WeekEntity | string> {
+    try {
+      const week: UpdateResult = await this.weekRepository.update(id, {
+        close: new Date(),
+        status: WEEKSTATE.CLOSE,
+      });
+
+      if (week.affected === 0) {
+        return "Week doesn't found";
+      }
+
+      return await this.getWeekById(id);
     } catch (error) {
       throw new Error(error);
     }
@@ -67,7 +84,7 @@ export class WeekService {
   public async updateWeek(
     id: number,
     body: WeekUpdateDTO,
-  ): Promise<UpdateResult | string> {
+  ): Promise<WeekEntity | string> {
     try {
       const week: UpdateResult = await this.weekRepository.update(id, body);
 
@@ -75,7 +92,7 @@ export class WeekService {
         return "Week doesn't found";
       }
 
-      return week;
+      return await this.getWeekById(id);
     } catch (error) {
       throw new Error(error);
     }

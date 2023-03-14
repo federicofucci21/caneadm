@@ -13,21 +13,18 @@ export class IncomeService {
     private readonly weekService: WeekService,
   ) {}
 
-  public async createIncome(body: any): Promise<IncomeEntity | string> {
+  public async createIncome(body: IncomeDTO): Promise<IncomeEntity | string> {
     try {
       const weekOpen = await this.weekService.findOpenWeek();
       if (!weekOpen) {
         return "We don't have an open week, please open one";
       }
 
-      const income: IncomeDTO = {
-        amount: body.amount,
-        detail: body.detail,
+      return await this.incomeRepository.save({
+        ...body,
         date: new Date(),
         week: weekOpen,
-      };
-
-      return await this.incomeRepository.save(income);
+      });
     } catch (error) {
       throw new Error(error);
     }
@@ -66,7 +63,7 @@ export class IncomeService {
   public async updateIncome(
     id: number,
     body: IncomeUpdateDTO,
-  ): Promise<UpdateResult | string> {
+  ): Promise<IncomeEntity | string> {
     try {
       const income: UpdateResult = await this.incomeRepository.update(id, body);
 
@@ -74,7 +71,7 @@ export class IncomeService {
         return `The id incomes number ${id} doesn't exist on database`;
       }
 
-      return income;
+      return await this.findIncomeById(id);
     } catch (error) {
       throw new Error(error);
     }

@@ -36,15 +36,15 @@ export class ProductService {
     }
   }
 
-  public async deleteProduct(id: number): Promise<UpdateResult | undefined> {
+  public async deleteProduct(id: number): Promise<ProductEntity | string> {
     try {
       const product: UpdateResult = await this.productRepository.update(id, {
         isActive: false,
       });
       if (product.affected === 0) {
-        return undefined;
+        return `The product with identification ${id} doesn't found on database`;
       }
-      return product;
+      return await this.findOneById(id);
     } catch (error) {
       throw new Error(error);
     }
@@ -53,16 +53,16 @@ export class ProductService {
   public async updateProduct(
     id: number,
     body: ProductUpdateDTO,
-  ): Promise<UpdateResult | undefined> {
+  ): Promise<ProductEntity | string> {
     try {
       const product: UpdateResult = await this.productRepository.update(
         id,
         body,
       );
       if (product.affected === 0) {
-        return undefined;
+        return `The user with identification ${id} doesn't found on database`;
       }
-      return product;
+      return await this.findOneById(id);
     } catch (error) {
       throw new Error(error);
     }
