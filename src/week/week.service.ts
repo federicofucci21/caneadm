@@ -24,8 +24,10 @@ export class WeekService {
         .createQueryBuilder('weeks')
         .where({ id })
         .leftJoinAndSelect('weeks.order', 'order')
+        .leftJoinAndSelect('weeks.income', 'income')
+        .leftJoinAndSelect('weeks.outgo', 'outgo')
+        .leftJoinAndSelect('weeks.expenses', 'expenses')
         .getOne();
-
       return week
         ? week
         : `We don't have a week with identification ${id} on our database`;
