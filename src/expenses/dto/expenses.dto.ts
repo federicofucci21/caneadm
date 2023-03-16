@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { WeekEntity } from '../../week/entities/week.entity';
 import { ProviderEntity } from '../../provider/entities/provider.entity';
 
 export class ExpensesDTO {
@@ -16,17 +17,20 @@ export class ExpensesDTO {
   @IsString()
   detail: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDate()
   date: Date;
 
   @IsNotEmpty()
-  @IsNumber()
   provider: ProviderEntity;
+
+  @IsOptional()
+  @IsNumber()
+  week: WeekEntity;
 }
 
 export class ExpensesUpdateDTO {
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   amount: number;
 
@@ -34,11 +38,14 @@ export class ExpensesUpdateDTO {
   @IsString()
   detail: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDate()
   date: Date;
 
-  @IsNotEmpty()
-  @IsNumber()
+  @IsOptional()
   provider: ProviderEntity;
+
+  @IsOptional()
+  @IsNumber()
+  week: WeekEntity;
 }
