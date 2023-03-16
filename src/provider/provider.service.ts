@@ -38,12 +38,18 @@ export class ProviderService {
     }
   }
 
-  public async getById(id: number): Promise<ProviderEntity> {
+  public async getById(id: number): Promise<ProviderEntity | string> {
     try {
-      return await this.providerRepository
+      const provider: ProviderEntity = await this.providerRepository
         .createQueryBuilder('providers')
         .where({ id })
+        .leftJoinAndSelect('providers.expenses', 'expenses')
         .getOne();
+      if (!provider) {
+        return `The provider with identification ${id} doesn't found on database`;
+      }
+
+      return provider;
     } catch (error) {
       throw new Error(error);
     }
@@ -52,16 +58,16 @@ export class ProviderService {
   public async updateProvider(
     id: number,
     body: ProviderUpdateDTO,
-  ): Promise<UpdateResult | undefined> {
+  ): Promise<ProviderEntity | string> {
     try {
       const provider: UpdateResult = await this.providerRepository.update(
         id,
         body,
       );
       if (provider.affected === 0) {
-        return undefined;
+        return `The provider with identification ${id} doesn't found on database`;
       }
-      return provider;
+      return await this.getById(id);
     } catch (error) {
       throw new Error(error);
     }
