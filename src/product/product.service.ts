@@ -60,7 +60,7 @@ export class ProductService {
         body,
       );
       if (product.affected === 0) {
-        return `The user with identification ${id} doesn't found on database`;
+        return `The product with identification ${id} doesn't found on database`;
       }
       return await this.findOneById(id);
     } catch (error) {
