@@ -38,18 +38,13 @@ export class ProviderService {
     }
   }
 
-  public async getById(id: number): Promise<ProviderEntity | string> {
+  public async getById(id: number): Promise<ProviderEntity> {
     try {
-      const provider: ProviderEntity = await this.providerRepository
+      return await this.providerRepository
         .createQueryBuilder('providers')
         .where({ id })
         .leftJoinAndSelect('providers.expenses', 'expenses')
         .getOne();
-      if (!provider) {
-        return `The provider with identification ${id} doesn't found on database`;
-      }
-
-      return provider;
     } catch (error) {
       throw new Error(error);
     }

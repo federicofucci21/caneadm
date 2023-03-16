@@ -6,7 +6,7 @@ import {
 
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn('increment')
-  id: string;
+  id: number;
 
   @CreateDateColumn({
     type: 'timestamp',
