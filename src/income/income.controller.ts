@@ -1,8 +1,10 @@
 import { Controller } from '@nestjs/common';
 import { Post, Body, Get, Param, Put } from '@nestjs/common/decorators';
+import { ApiTags } from '@nestjs/swagger';
 import { IncomeUpdateDTO } from './dto/income.dto';
 import { IncomeService } from './income.service';
 
+@ApiTags('Incomes')
 @Controller('income')
 export class IncomeController {
   constructor(private readonly incomeService: IncomeService) {}

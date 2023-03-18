@@ -1,8 +1,10 @@
 import { Controller } from '@nestjs/common';
 import { Body, Get, Param, Post, Put } from '@nestjs/common/decorators';
+import { ApiTags } from '@nestjs/swagger';
 import { ExpensesDTO, ExpensesUpdateDTO } from './dto/expenses.dto';
 import { ExpensesService } from './expenses.service';
 
+@ApiTags('Expenses')
 @Controller('expenses')
 export class ExpensesController {
   constructor(private readonly expensesService: ExpensesService) {}
