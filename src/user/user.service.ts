@@ -7,6 +7,7 @@ import { OrderDTO, ProductsForOrderDTO } from '../order/dto/order.dto';
 import { totalPrice } from '../helpers/total';
 import { ProductsForOrderEntity } from '../order/entities/productOrder.entity';
 import { WeekService } from '../week/week.service';
+import { ProductEntity } from '../product/entities/product.entity';
 
 export class UserService {
   constructor(
@@ -17,6 +18,8 @@ export class UserService {
     @InjectRepository(OrderEntity)
     private readonly orderRepository: Repository<OrderEntity>,
     private readonly weekService: WeekService,
+    @InjectRepository(ProductEntity)
+    private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
   public async createUser(body: UserDTO): Promise<UserEntity> {
@@ -103,7 +106,14 @@ export class UserService {
         total: totalPrice(products),
         week: weekOpen,
       };
-
+      products.forEach(async (e) => {
+        const id = e.product.id;
+        const productStock = await this.productRepository.findOneBy({ id });
+        const body = {
+          stock: productStock.stock - e.quantity,
+        };
+        await this.productRepository.update(id, body);
+      });
       return await this.orderRepository.save(order);
     } catch (error) {
       throw new Error(error);

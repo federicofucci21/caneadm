@@ -4,6 +4,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import { OrderUpdateDTO, ProductsForOrderUpdateDTO } from './dto/order.dto';
 import { OrderEntity } from './entities/order.entity';
 import { ProductsForOrderEntity } from './entities/productOrder.entity';
+import { ProductEntity } from '../product/entities/product.entity';
 
 export class OrderService {
   constructor(
@@ -11,6 +12,8 @@ export class OrderService {
     private readonly orderRepository: Repository<OrderEntity>,
     @InjectRepository(ProductsForOrderEntity)
     private readonly productOrderRepository: Repository<ProductsForOrderEntity>,
+    @InjectRepository(ProductEntity)
+    private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
   public async allOrders(): Promise<OrderEntity[]> {
@@ -49,17 +52,47 @@ export class OrderService {
         return `Order number ${id} doesn't found`;
       }
 
+      body.forEach(async (e) => {
+        const prodId = e.product.id;
+        const productStock = await this.productRepository
+          .createQueryBuilder('product')
+          .where({ id: prodId })
+          .getOne();
+        const lastStock = await this.productOrderRepository
+          .createQueryBuilder('products_for_order_entity')
+          .where({ orderInclude: id })
+          .andWhere({ product: prodId })
+          .getOne();
+        const body = {
+          stock: productStock.stock + lastStock.quantity,
+        };
+        await this.productRepository.update(prodId, body);
+      });
+
       await this.productOrderRepository.delete({
         orderInclude: await this.findOneById(id),
       });
 
       const products = await this.productOrderRepository.save(body);
 
+      console.log('PRODUCT', products);
+
       const newOrder = {
         id,
         productsForOrder: products,
         total: totalPrice(body),
       };
+
+      products.forEach(async (e) => {
+        const prodId = e.product.id;
+        const productStock = await this.productRepository.findOneBy({
+          id: prodId,
+        });
+        const body = {
+          stock: productStock.stock - e.quantity,
+        };
+        await this.productRepository.update(prodId, body);
+      });
 
       return await this.orderRepository.save(newOrder);
     } catch (error) {
