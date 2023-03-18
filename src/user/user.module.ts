@@ -7,6 +7,7 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { WeekEntity } from '../week/entities/week.entity';
 import { WeekService } from '../week/week.service';
+import { ProductEntity } from '../product/entities/product.entity';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { WeekService } from '../week/week.service';
       OrderEntity,
       ProductsForOrderEntity,
       WeekEntity,
+      ProductEntity,
     ]),
   ],
   controllers: [UserController],
