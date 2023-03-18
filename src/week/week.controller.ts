@@ -7,9 +7,11 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { WeekDTO, WeekUpdateDTO } from './dto/week.dto';
 import { WeekService } from './week.service';
 
+@ApiTags('Weeks')
 @Controller('week')
 export class WeekController {
   constructor(private readonly weekService: WeekService) {}

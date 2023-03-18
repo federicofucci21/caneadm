@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { UserEntity } from './entities/user.entity';
 import { OrderEntity } from '../order/entities/order.entity';
-import { OrderDTO } from '../order/dto/order.dto';
+import { OrderDTO, ProductsForOrderDTO } from '../order/dto/order.dto';
 import { totalPrice } from '../helpers/total';
 import { ProductsForOrderEntity } from '../order/entities/productOrder.entity';
 import { WeekService } from '../week/week.service';
@@ -91,8 +91,8 @@ export class UserService {
   }
 
   public async orderCreate(
-    userId,
-    products: Array<ProductsForOrderEntity>,
+    userId: number,
+    products: Array<ProductsForOrderDTO>,
   ): Promise<OrderEntity | string> {
     try {
       const weekOpen = await this.weekService.findOpenWeek();
@@ -100,10 +100,9 @@ export class UserService {
         return "We don't have an open week, please open one";
       }
 
-      const allProds = await this.productOrderRepository.save(products);
       const order: OrderDTO = {
-        user: userId,
-        productsForOrder: allProds,
+        user: await this.getById(userId),
+        productsForOrder: await this.productOrderRepository.save(products),
         total: totalPrice(products),
         week: weekOpen,
       };

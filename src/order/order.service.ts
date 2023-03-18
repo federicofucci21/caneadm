@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { totalPrice } from '../helpers/total';
 import { Repository, UpdateResult } from 'typeorm';
-import { OrderUpdateDTO } from './dto/order.dto';
+import { OrderUpdateDTO, ProductsForOrderUpdateDTO } from './dto/order.dto';
 import { OrderEntity } from './entities/order.entity';
 import { ProductsForOrderEntity } from './entities/productOrder.entity';
 
@@ -21,26 +21,23 @@ export class OrderService {
     }
   }
 
-  public async findOneById(id: number): Promise<OrderEntity | string> {
+  public async findOneById(id: number): Promise<OrderEntity> {
     try {
-      const order = await this.orderRepository
+      return await this.orderRepository
         .createQueryBuilder('orders')
         .where({ id })
         .leftJoinAndSelect('orders.user', 'user')
         .leftJoinAndSelect('orders.productsForOrder', 'productsForOrder')
         .leftJoinAndSelect('productsForOrder.product', 'product')
         .getOne();
-      return order
-        ? order
-        : `We don't have an order with identification ${id} on our database`;
     } catch (error) {
       throw new Error(error);
     }
   }
 
   public async updateOrder(
-    id,
-    body: Array<ProductsForOrderEntity>,
+    id: number,
+    body: Array<ProductsForOrderUpdateDTO>,
   ): Promise<OrderEntity | string> {
     try {
       const order: OrderEntity = await this.orderRepository
@@ -53,7 +50,7 @@ export class OrderService {
       }
 
       await this.productOrderRepository.delete({
-        orderInclude: id,
+        orderInclude: await this.findOneById(id),
       });
 
       const products = await this.productOrderRepository.save(body);

@@ -1,8 +1,10 @@
 import { Controller } from '@nestjs/common';
 import { Post, Body, Get, Put, Param } from '@nestjs/common/decorators';
+import { ApiTags } from '@nestjs/swagger';
 import { OutgoUpdateDTO } from './dto/outgo.dto';
 import { OutgoService } from './outgo.service';
 
+@ApiTags('Outgoes')
 @Controller('outgo')
 export class OutgoController {
   constructor(private readonly outgoService: OutgoService) {}
