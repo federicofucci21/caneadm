@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { OrderUpdateDTO } from './dto/order.dto';
-import { ProductsForOrderEntity } from './entities/productOrder.entity';
+import { OrderUpdateDTO, ProductsForOrderUpdateDTO } from './dto/order.dto';
 import { OrderService } from './order.service';
 
 @ApiTags('Orders')
@@ -22,7 +21,7 @@ export class OrderController {
   @Put('id/:id')
   public async editOrder(
     @Param('id') id: string,
-    @Body() body: Array<ProductsForOrderEntity>,
+    @Body() body: Array<ProductsForOrderUpdateDTO>,
   ) {
     return await this.orderService.updateOrder(Number(id), body);
   }

@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ProductsForOrderEntity } from '../order/entities/productOrder.entity';
+import { ProductsForOrderDTO } from '../order/dto/order.dto';
 import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 @ApiTags('Users')
@@ -50,7 +50,7 @@ export class UserController {
   @Post('id/:id/order')
   public async orderCreate(
     @Param('id') id: string,
-    @Body() body: ProductsForOrderEntity[],
+    @Body() body: Array<ProductsForOrderDTO>,
   ) {
     return await this.userService.orderCreate(Number(id), body);
   }
