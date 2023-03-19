@@ -5,6 +5,7 @@ import { OrderUpdateDTO, ProductsForOrderUpdateDTO } from './dto/order.dto';
 import { OrderEntity } from './entities/order.entity';
 import { ProductsForOrderEntity } from './entities/productOrder.entity';
 import { ProductEntity } from '../product/entities/product.entity';
+import { Response } from 'express';
 
 export class OrderService {
   constructor(
@@ -105,7 +106,8 @@ export class OrderService {
     body: OrderUpdateDTO,
   ): Promise<OrderEntity | string> {
     try {
-      const order: UpdateResult = await this.orderRepository.update(id, body);
+      const order: UpdateResult | Response | any =
+        await this.orderRepository.update(id, body);
 
       if (order.affected === 0) {
         return `Order number ${id} doesn't found`;

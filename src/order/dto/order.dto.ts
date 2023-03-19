@@ -11,6 +11,7 @@ import { WeekEntity } from '../../week/entities/week.entity';
 import { UserEntity } from '../../user/entities/user.entity';
 import { ProductsForOrderEntity } from '../entities/productOrder.entity';
 import { ProductEntity } from '../../product/entities/product.entity';
+import { Response } from 'express';
 
 export class OrderDTO {
   @IsOptional()
@@ -21,7 +22,7 @@ export class OrderDTO {
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty()
-  user: UserEntity;
+  user: UserEntity | Response;
 
   @IsNotEmpty()
   @IsArray()
@@ -48,7 +49,7 @@ export class OrderUpdateDTO {
   @IsOptional()
   @IsNumber()
   @ApiProperty()
-  user: UserEntity;
+  user: UserEntity | Response | any;
 
   @IsOptional()
   @IsArray()
