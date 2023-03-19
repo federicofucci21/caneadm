@@ -6,6 +6,7 @@ import { OrderEntity } from './entities/order.entity';
 import { ProductsForOrderEntity } from './entities/productOrder.entity';
 import { ProductEntity } from '../product/entities/product.entity';
 import { Response } from 'express';
+import { HttpStatus } from '@nestjs/common';
 
 export class OrderService {
   constructor(
@@ -17,23 +18,47 @@ export class OrderService {
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  public async allOrders(): Promise<OrderEntity[]> {
+  public async allOrders(res: Response): Promise<OrderEntity[] | Response> {
     try {
-      return await this.orderRepository.find();
+      const orders: OrderEntity[] = await this.orderRepository.find();
+      if (!orders) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .header('Found', 'orders Not Found')
+          .json({ message: `No orders on DataBase` });
+      }
+      return res
+        .status(HttpStatus.FOUND)
+        .header('Found', `${orders.length} orders found on DataBase`)
+        .json(orders);
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  public async findOneById(id: number): Promise<OrderEntity> {
+  public async findOneById(
+    id: number,
+    res: Response,
+  ): Promise<OrderEntity | Response> {
     try {
-      return await this.orderRepository
+      const order: OrderEntity = await this.orderRepository
         .createQueryBuilder('orders')
         .where({ id })
         .leftJoinAndSelect('orders.user', 'user')
         .leftJoinAndSelect('orders.productsForOrder', 'productsForOrder')
         .leftJoinAndSelect('productsForOrder.product', 'product')
         .getOne();
+      if (!order) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .header('Found', 'Not Found')
+          .json({ message: `order with ID: ${id} do not exist` });
+      } else {
+        return res
+          .status(HttpStatus.FOUND)
+          .header('Found', `order with ID: ${id} found`)
+          .json(order);
+      }
     } catch (error) {
       throw new Error(error);
     }
@@ -42,7 +67,8 @@ export class OrderService {
   public async updateOrder(
     id: number,
     body: Array<ProductsForOrderUpdateDTO>,
-  ): Promise<OrderEntity | string> {
+    res: Response,
+  ): Promise<OrderEntity | Response> {
     try {
       const order: OrderEntity = await this.orderRepository
         .createQueryBuilder('orders')
@@ -50,33 +76,41 @@ export class OrderService {
         .getOne();
 
       if (!order) {
-        return `Order number ${id} doesn't found`;
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .header('Found', 'Not Found')
+          .json({ message: `order with ID: ${id} do not exist` });
       }
 
       body.forEach(async (e) => {
         const prodId = e.product.id;
-        const productStock = await this.productRepository
+        const productStock: ProductEntity = await this.productRepository
           .createQueryBuilder('product')
           .where({ id: prodId })
           .getOne();
-        const lastStock = await this.productOrderRepository
-          .createQueryBuilder('products_for_order_entity')
-          .where({ orderInclude: id })
-          .andWhere({ product: prodId })
-          .getOne();
+        const lastStock: ProductsForOrderEntity =
+          await this.productOrderRepository
+            .createQueryBuilder('products_for_order_entity')
+            .where({ orderInclude: id })
+            .andWhere({ product: prodId })
+            .getOne();
         const body = {
           stock: productStock.stock + lastStock.quantity,
         };
-        await this.productRepository.update(prodId, body);
+        const stockUpdated = await this.productRepository.update(prodId, body);
+        if (stockUpdated.affected === 0) {
+          return res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .header('Error', 'Stock-Error')
+            .json({ message: `Something goes wrong with stock` });
+        }
       });
 
       await this.productOrderRepository.delete({
-        orderInclude: await this.findOneById(id),
+        orderInclude: await this.orderRepository.findBy({ id }),
       });
 
       const products = await this.productOrderRepository.save(body);
-
-      console.log('PRODUCT', products);
 
       const newOrder = {
         id,
@@ -95,7 +129,20 @@ export class OrderService {
         await this.productRepository.update(prodId, body);
       });
 
-      return await this.orderRepository.save(newOrder);
+      const newOrderSaved = await this.orderRepository.save(newOrder);
+
+      if (!newOrderSaved) {
+        return res
+          .status(HttpStatus.NOT_MODIFIED)
+          .header('Found', 'Order not updated')
+          .json({
+            message: `The order with ID: ${id} not updated`,
+          });
+      }
+      return res
+        .status(HttpStatus.OK)
+        .header('Updated', 'Order Updated')
+        .json(newOrderSaved);
     } catch (error) {
       throw new Error(error);
     }
@@ -104,16 +151,25 @@ export class OrderService {
   public async updateStateOrder(
     id: number,
     body: OrderUpdateDTO,
-  ): Promise<OrderEntity | string> {
+    res: Response,
+  ): Promise<OrderEntity | Response> {
     try {
       const order: UpdateResult | Response | any =
         await this.orderRepository.update(id, body);
 
       if (order.affected === 0) {
-        return `Order number ${id} doesn't found`;
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .header('Found', 'order Not Found')
+          .json({
+            message: `The order with ID: ${id} doesn't found on database`,
+          });
       }
-
-      return await this.findOneById(id);
+      const orderUpdated = await this.findOneById(id, res);
+      return res
+        .status(HttpStatus.OK)
+        .header('Updated', `The order with ID: ${id} updated`)
+        .json(orderUpdated);
     } catch (error) {
       throw new Error(error);
     }
