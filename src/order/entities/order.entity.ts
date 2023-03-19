@@ -14,7 +14,7 @@ export class OrderEntity extends BaseEntity {
   total: number;
 
   @ManyToOne(() => UserEntity, (user) => user.orders)
-  user: UserEntity;
+  user: UserEntity | any;
 
   @OneToMany(
     () => ProductsForOrderEntity,

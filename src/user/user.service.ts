@@ -8,6 +8,8 @@ import { totalPrice } from '../helpers/total';
 import { ProductsForOrderEntity } from '../order/entities/productOrder.entity';
 import { WeekService } from '../week/week.service';
 import { ProductEntity } from '../product/entities/product.entity';
+import { Response } from 'express';
+import { HttpStatus } from '@nestjs/common/enums';
 
 export class UserService {
   constructor(
@@ -22,17 +24,40 @@ export class UserService {
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  public async createUser(body: UserDTO): Promise<UserEntity> {
+  public async createUser(
+    body: UserDTO,
+    res: Response,
+  ): Promise<UserEntity | Response> {
     try {
-      return await this.userRepository.save(body);
+      const user = await this.userRepository.save(body);
+      if (!user) {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .header('Created', 'Not Created')
+          .json({ message: `User not created` });
+      }
+      return res
+        .status(HttpStatus.CREATED)
+        .header('Created', 'User Created')
+        .json(user);
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  public async findUsers(): Promise<UserEntity[]> {
+  public async findUsers(res: Response): Promise<UserEntity[] | Response> {
     try {
-      return await this.userRepository.find();
+      const users = await this.userRepository.find();
+      if (!users) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .header('Found', 'Users Not Found')
+          .json({ message: `No users on DataBase` });
+      }
+      return res
+        .status(HttpStatus.FOUND)
+        .header('Found', 'Users found')
+        .json(users);
     } catch (error) {
       throw new Error(error);
     }
@@ -49,38 +74,80 @@ export class UserService {
     }
   }
 
-  public async findOneByCell(cell: string): Promise<UserEntity> {
+  public async findOneByCell(
+    cell: string,
+    res: Response,
+  ): Promise<UserEntity | Response> {
     try {
-      return await this.userRepository
+      const user = await this.userRepository
         .createQueryBuilder('users')
         .where({ cell })
         .getOne();
+      if (!user) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .header('Found', 'Not Found')
+          .json({
+            message: `User with cellphone number: ${cell} do not exist`,
+          });
+      } else {
+        return res
+          .status(HttpStatus.FOUND)
+          .header('Found', 'User Found')
+          .json(user);
+      }
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  public async getById(id: number): Promise<UserEntity> {
+  public async getById(
+    id: number,
+    res: Response,
+  ): Promise<UserEntity | Response> {
     try {
-      return await this.userRepository
+      const user = await this.userRepository
         .createQueryBuilder('users')
         .where({ id })
         .getOne();
+      if (!user) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .header('Found', 'Not Found')
+          .json({ message: `User with ID: ${id} do not exist` });
+      } else {
+        return res
+          .status(HttpStatus.FOUND)
+          .header('Found', 'User Found')
+          .json(user);
+      }
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  public async deleteUser(id: number): Promise<UserEntity | string> {
+  public async deleteUser(
+    id: number,
+    res: Response,
+  ): Promise<UserEntity | Response> {
     try {
       const user: UpdateResult = await this.userRepository.update(id, {
         isActive: false,
       });
 
       if (user.affected === 0) {
-        return `The user with identification ${id} doesn't found on database`;
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .header('Found', 'User Found')
+          .json({
+            message: `The user with identification ${id} doesn't found on database`,
+          });
       }
-      return await this.getById(id);
+      const userDeleted = await this.getById(id, res);
+      return res
+        .status(HttpStatus.OK)
+        .header('Found', 'User Found')
+        .json(userDeleted);
     } catch (error) {
       throw new Error(error);
     }
@@ -89,13 +156,23 @@ export class UserService {
   public async updateUser(
     id: number,
     body: UserUpdateDTO,
-  ): Promise<UserEntity | string> {
+    res: Response,
+  ): Promise<UserEntity | Response> {
     try {
       const user: UpdateResult = await this.userRepository.update(id, body);
       if (user.affected === 0) {
-        return `The user with identification ${id} doesn't found on database`;
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .header('Found', 'User Found')
+          .json({
+            message: `The user with identification ${id} doesn't found on database`,
+          });
       }
-      return await this.getById(id);
+      const userUpdated = await this.getById(id, res);
+      return res
+        .status(HttpStatus.OK)
+        .header('Updated', 'User Updated')
+        .json(userUpdated);
     } catch (error) {
       throw new Error(error);
     }
@@ -104,15 +181,21 @@ export class UserService {
   public async orderCreate(
     userId: number,
     products: Array<ProductsForOrderDTO>,
-  ): Promise<OrderEntity | string> {
+    res: Response,
+  ): Promise<OrderEntity | Response | any> {
     try {
       const weekOpen = await this.weekService.findOpenWeek();
       if (!weekOpen) {
-        return "We don't have an open week, please open one";
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .header('Found', 'week not found')
+          .json({
+            message: "We don't have an open week, please open one",
+          });
       }
 
       const order: OrderDTO = {
-        user: await this.getById(userId),
+        user: await this.getById(userId, res),
         productsForOrder: await this.productOrderRepository.save(products),
         total: totalPrice(products),
         week: weekOpen,
@@ -125,20 +208,35 @@ export class UserService {
         };
         await this.productRepository.update(id, body);
       });
-      return await this.orderRepository.save(order);
+      const orderSaved = await this.orderRepository.save(order);
+      return res.status(HttpStatus.OK).header('Saved', 'true').json(orderSaved);
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  public async allUserOrders(id: number): Promise<OrderEntity[]> {
+  public async allUserOrders(
+    id: number,
+    res: Response,
+  ): Promise<OrderEntity[] | Response> {
     try {
-      return await this.orderRepository
+      const orders = await this.orderRepository
         .createQueryBuilder('orders')
         .where({ user: id })
         .leftJoinAndSelect('orders.productsForOrder', 'productsForOrder')
         .leftJoinAndSelect('productsForOrder.product', 'product')
         .getMany();
+      if (!orders.length) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .header('Found', 'Not Found')
+          .json({ message: `user with id: ${id}, have no orders on database` });
+      } else {
+        return res
+          .status(HttpStatus.FOUND)
+          .header('Found', 'Orders Found')
+          .json(orders);
+      }
     } catch (error) {
       throw new Error(error);
     }
