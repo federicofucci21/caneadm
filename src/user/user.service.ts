@@ -49,6 +49,17 @@ export class UserService {
     }
   }
 
+  public async findOneByCell(cell: string): Promise<UserEntity> {
+    try {
+      return await this.userRepository
+        .createQueryBuilder('users')
+        .where({ cell })
+        .getOne();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   public async getById(id: number): Promise<UserEntity> {
     try {
       return await this.userRepository
