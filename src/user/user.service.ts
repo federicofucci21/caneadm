@@ -56,7 +56,7 @@ export class UserService {
       }
       return res
         .status(HttpStatus.FOUND)
-        .header('Found', 'Users found')
+        .header('Found', `${users.length} users found on DataBase`)
         .json(users);
     } catch (error) {
       throw new Error(error);
@@ -138,15 +138,15 @@ export class UserService {
       if (user.affected === 0) {
         return res
           .status(HttpStatus.NOT_FOUND)
-          .header('Found', 'User Found')
+          .header('Found', 'User not Found')
           .json({
-            message: `The user with identification ${id} doesn't found on database`,
+            message: `User with identification ${id} doesn't found on database`,
           });
       }
       const userDeleted = await this.getById(id, res);
       return res
         .status(HttpStatus.OK)
-        .header('Found', 'User Found')
+        .header('Deleted', `User ID: ${id} deleted`)
         .json(userDeleted);
     } catch (error) {
       throw new Error(error);
