@@ -10,6 +10,7 @@ import { WeekService } from '../week/week.service';
 import { ProductEntity } from '../product/entities/product.entity';
 import { Response } from 'express';
 import { HttpStatus } from '@nestjs/common/enums';
+import { WeekEntity } from '../week/entities/week.entity';
 
 export class UserService {
   constructor(
@@ -29,7 +30,7 @@ export class UserService {
     res: Response,
   ): Promise<UserEntity | Response> {
     try {
-      const user = await this.userRepository.save(body);
+      const user: UserEntity = await this.userRepository.save(body);
       if (!user) {
         return res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -47,7 +48,7 @@ export class UserService {
 
   public async findUsers(res: Response): Promise<UserEntity[] | Response> {
     try {
-      const users = await this.userRepository.find();
+      const users: UserEntity[] = await this.userRepository.find();
       if (!users) {
         return res
           .status(HttpStatus.NOT_FOUND)
@@ -79,7 +80,7 @@ export class UserService {
     res: Response,
   ): Promise<UserEntity | Response> {
     try {
-      const user = await this.userRepository
+      const user: UserEntity = await this.userRepository
         .createQueryBuilder('users')
         .where({ cell })
         .getOne();
@@ -106,7 +107,7 @@ export class UserService {
     res: Response,
   ): Promise<UserEntity | Response> {
     try {
-      const user = await this.userRepository
+      const user: UserEntity = await this.userRepository
         .createQueryBuilder('users')
         .where({ id })
         .getOne();
@@ -118,7 +119,7 @@ export class UserService {
       } else {
         return res
           .status(HttpStatus.FOUND)
-          .header('Found', 'User Found')
+          .header('Found', `User with ID: ${id} found`)
           .json(user);
       }
     } catch (error) {
@@ -163,15 +164,15 @@ export class UserService {
       if (user.affected === 0) {
         return res
           .status(HttpStatus.NOT_FOUND)
-          .header('Found', 'User Found')
+          .header('Found', 'User Not Found')
           .json({
-            message: `The user with identification ${id} doesn't found on database`,
+            message: `The user with ID: ${id} doesn't found on database`,
           });
       }
-      const userUpdated = await this.getById(id, res);
+      const userUpdated: UserEntity | Response = await this.getById(id, res);
       return res
         .status(HttpStatus.OK)
-        .header('Updated', 'User Updated')
+        .header('Updated', `The user ID: ${id} updated`)
         .json(userUpdated);
     } catch (error) {
       throw new Error(error);
@@ -184,7 +185,7 @@ export class UserService {
     res: Response,
   ): Promise<OrderEntity | Response | any> {
     try {
-      const weekOpen = await this.weekService.findOpenWeek();
+      const weekOpen: WeekEntity = await this.weekService.findOpenWeek();
       if (!weekOpen) {
         return res
           .status(HttpStatus.NOT_FOUND)
@@ -220,7 +221,7 @@ export class UserService {
     res: Response,
   ): Promise<OrderEntity[] | Response> {
     try {
-      const orders = await this.orderRepository
+      const orders: OrderEntity[] = await this.orderRepository
         .createQueryBuilder('orders')
         .where({ user: id })
         .leftJoinAndSelect('orders.productsForOrder', 'productsForOrder')
