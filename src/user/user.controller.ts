@@ -32,6 +32,11 @@ export class UserController {
     return await this.userService.findOneByEmail(email);
   }
 
+  @Get('cell')
+  public async getUserByCell(@Query('c') cell: string) {
+    return await this.userService.findOneByCell(cell);
+  }
+
   @Post()
   public async createUser(@Body() body: UserDTO) {
     return await this.userService.createUser(body);
