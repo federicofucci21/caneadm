@@ -27,7 +27,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('documentation', app, document);
 
-  await app.listen(3000);
-  console.log(`Cane-Server is running on port:3000`);
+  await app.listen(+process.env.PORT);
+  console.log(`Cane-Server is running on port:${+process.env.PORT}`);
 }
 bootstrap();
