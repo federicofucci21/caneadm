@@ -1,5 +1,7 @@
 import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Response } from 'express';
+import { HttpStatus } from '@nestjs/common/enums';
 import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { UserEntity } from './entities/user.entity';
 import { OrderEntity } from '../order/entities/order.entity';
@@ -8,9 +10,8 @@ import { totalPrice } from '../helpers/total';
 import { ProductsForOrderEntity } from '../order/entities/productOrder.entity';
 import { WeekService } from '../week/week.service';
 import { ProductEntity } from '../product/entities/product.entity';
-import { Response } from 'express';
-import { HttpStatus } from '@nestjs/common/enums';
 import { WeekEntity } from '../week/entities/week.entity';
+import { ErrorManager } from '../helpers/error.manager';
 
 export class UserService {
   constructor(
@@ -66,12 +67,21 @@ export class UserService {
 
   public async findOneByEmail(email: string): Promise<UserEntity> {
     try {
-      return await this.userRepository
+      const user: UserEntity = await this.userRepository
         .createQueryBuilder('users')
         .where({ email })
         .getOne();
+
+      if (!user) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: `We cannot find user with email ${email}`,
+        });
+      }
+
+      return user;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
