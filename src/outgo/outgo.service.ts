@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { WeekService } from '../week/week.service';
 import { OutgoDTO, OutgoUpdateDTO } from './dto/outgo.dto';
 import { OutgoEntity } from './entities/outgo.entity';
+import { ErrorManager } from '../helpers/error.manager';
 
 @Injectable()
 export class OutgoService {
@@ -13,37 +14,50 @@ export class OutgoService {
     private readonly weekService: WeekService,
   ) {}
 
-  public async createOutgo(body: OutgoDTO): Promise<OutgoEntity | string> {
+  public async createOutgo(body: OutgoDTO): Promise<OutgoEntity> {
     try {
       const week = await this.weekService.findOpenWeek();
       if (!week) {
-        return "We don't have an open week, please open one";
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `There aren't open week, please open one`,
+        });
       }
 
-      return await this.outgoRepository.save({
+      const outgo = await this.outgoRepository.save({
         ...body,
         date: new Date(),
         week,
       });
+      if (!outgo) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: `outgo not created`,
+        });
+      }
+      return outgo;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
-  public async findOutgoes(): Promise<OutgoEntity[] | string> {
+  public async findOutgoes(): Promise<OutgoEntity[]> {
     try {
       const outgoes: OutgoEntity[] = await this.outgoRepository.find();
-      if (!outgoes.length) {
-        return "We don't have any incomes on database";
+      if (!outgoes) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `No outgoes on DataBase`,
+        });
       }
 
       return outgoes;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
-  public async findOutgoById(id: number): Promise<OutgoEntity | string> {
+  public async findOutgoById(id: number): Promise<OutgoEntity> {
     try {
       const outgo: OutgoEntity = await this.outgoRepository
         .createQueryBuilder('outgoes')
@@ -51,12 +65,14 @@ export class OutgoService {
         .getOne();
 
       if (!outgo) {
-        return `The id incomes number ${id} doesn't exist on database`;
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `outgo with ID: ${id} do not exist`,
+        });
       }
-
       return outgo;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
