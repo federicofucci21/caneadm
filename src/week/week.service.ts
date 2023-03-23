@@ -1,4 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
+import { ErrorManager } from '../helpers/error.manager';
 import { Repository, UpdateResult } from 'typeorm';
 import { WEEKSTATE } from '../constants/weekState';
 import { WeekDTO, WeekUpdateDTO } from './dto/week.dto';
@@ -12,13 +13,20 @@ export class WeekService {
 
   public async allWeeks(): Promise<WeekEntity[]> {
     try {
-      return await this.weekRepository.find();
+      const weeks = await this.weekRepository.find();
+      if (!weeks) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `No weeks on DataBase`,
+        });
+      }
+      return weeks;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
-  public async getWeekById(id: number): Promise<WeekEntity | string> {
+  public async getWeekById(id: number): Promise<WeekEntity> {
     try {
       const week = await this.weekRepository
         .createQueryBuilder('weeks')
@@ -28,26 +36,37 @@ export class WeekService {
         .leftJoinAndSelect('weeks.outgo', 'outgo')
         .leftJoinAndSelect('weeks.expenses', 'expenses')
         .getOne();
-      return week
-        ? week
-        : `We don't have a week with identification ${id} on our database`;
+      if (!week) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `Week with ID: ${id} do not exist`,
+        });
+      }
+      return week;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
   public async findOpenWeek(): Promise<WeekEntity> {
     try {
-      return await this.weekRepository
+      const openWeek = await this.weekRepository
         .createQueryBuilder('weeks')
         .where({ status: WEEKSTATE.OPEN })
         .getOne();
+      if (!openWeek) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `There aren't open week, please open one`,
+        });
+      }
+      return openWeek;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
-  public async weekCreate(body: WeekDTO): Promise<WeekEntity | string> {
+  public async weekCreate(body: WeekDTO): Promise<WeekEntity> {
     try {
       const week = await this.weekRepository
         .createQueryBuilder('weeks')
@@ -55,16 +74,30 @@ export class WeekService {
         .getOne();
 
       if (week) {
-        return 'You have an open week, please close it';
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'You have an open week, please close it',
+        });
       }
 
-      return this.weekRepository.save({ ...body, open: new Date(), close: '' });
+      const newWeek = this.weekRepository.save({
+        ...body,
+        open: new Date(),
+        close: '',
+      });
+      if (!newWeek) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: `week not created`,
+        });
+      }
+      return newWeek;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
-  public async closeWeek(id: number): Promise<WeekEntity | string> {
+  public async closeWeek(id: number): Promise<WeekEntity> {
     try {
       const week: UpdateResult = await this.weekRepository.update(id, {
         close: new Date(),
@@ -72,29 +105,33 @@ export class WeekService {
       });
 
       if (week.affected === 0) {
-        return "Week doesn't found";
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `Week with ID: ${id} doesn't found on database`,
+        });
       }
-
       return await this.getWeekById(id);
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
   public async updateWeek(
     id: number,
     body: WeekUpdateDTO,
-  ): Promise<WeekEntity | string> {
+  ): Promise<WeekEntity> {
     try {
       const week: UpdateResult = await this.weekRepository.update(id, body);
 
       if (week.affected === 0) {
-        return "Week doesn't found";
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `Week with ID: ${id} doesn't found on database`,
+        });
       }
-
       return await this.getWeekById(id);
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
