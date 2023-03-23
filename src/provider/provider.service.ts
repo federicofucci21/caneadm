@@ -96,7 +96,7 @@ export class ProviderService {
       }
       return await this.getById(id);
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 }

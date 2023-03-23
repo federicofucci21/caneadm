@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ErrorManager } from '../helpers/error.manager';
 import { Repository, UpdateResult } from 'typeorm';
 import { ProviderService } from '../provider/provider.service';
 import { WeekService } from '../week/week.service';
@@ -15,19 +16,23 @@ export class ExpensesService {
     private readonly providerService: ProviderService,
   ) {}
 
-  public async createExpenses(
-    body: ExpensesDTO,
-  ): Promise<ExpensesEntity | string> {
+  public async createExpenses(body: ExpensesDTO): Promise<ExpensesEntity> {
     try {
       const week = await this.weekService.findOpenWeek();
       if (!week) {
-        return "We don't have an open week, please open one";
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `There aren't open week, please open one`,
+        });
       }
 
       const provider = await this.providerService.getById(body.provider.id);
 
       if (!provider) {
-        return "We don't have a provider with than id on database";
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `provider with ID: ${body.provider.id} do not exist`,
+        });
       }
 
       const expenses: ExpensesDTO = {
@@ -36,39 +41,67 @@ export class ExpensesService {
         provider,
         week,
       };
-      return await this.expensesRepository.save(expenses);
+      const expensesCreate = await this.expensesRepository.save(expenses);
+      if (!expensesCreate) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: `Expenses not created`,
+        });
+      }
+      return expensesCreate;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
   public async findExpenses(): Promise<ExpensesEntity[]> {
     try {
-      return await this.expensesRepository.find();
+      const expenses = await this.expensesRepository.find();
+      if (!expenses) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `No expenses on DataBase`,
+        });
+      }
+      return expenses;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
   public async findOneById(id: number): Promise<ExpensesEntity> {
     try {
-      return await this.expensesRepository
+      const expenses = await this.expensesRepository
         .createQueryBuilder('expenses')
         .where({ id })
         .leftJoinAndSelect('expenses.provider', 'provider')
         .getOne();
+      if (!expenses) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `expenses with ID: ${id} do not exist`,
+        });
+      }
+      return expenses;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
   public async findProvidersExpenses(id: number): Promise<ExpensesEntity[]> {
     try {
-      return await this.expensesRepository
+      const providerExpenses = await this.expensesRepository
         .createQueryBuilder('expenses')
         .where({ provider: id })
         .getMany();
+      if (!providerExpenses) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `provider with ID: ${id} do not have related expenses`,
+        });
+      }
+      return providerExpenses;
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
@@ -82,11 +115,14 @@ export class ExpensesService {
         body,
       );
       if (expenses.affected === 0) {
-        return `The expense with identification ${id} doesn't found on database`;
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `The expense with identification ${id} doesn't found on database`,
+        });
       }
       return await this.findOneById(id);
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 }
