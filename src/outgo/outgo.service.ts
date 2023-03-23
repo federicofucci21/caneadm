@@ -84,12 +84,15 @@ export class OutgoService {
       const outgo: UpdateResult = await this.outgoRepository.update(id, body);
 
       if (outgo.affected === 0) {
-        return `The id incomes number ${id} doesn't exist on database`;
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: `The outgo with identification ${id} doesn't found on database`,
+        });
       }
 
       return await this.findOutgoById(id);
     } catch (error) {
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 }
