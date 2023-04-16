@@ -57,7 +57,7 @@ export const mockUserArray: UserDTO[] = [
     firstName: 'Fede',
     lastName: '',
     email: 'string',
-    cell: '1234567',
+    cell: '11111',
     address: 'string',
     isActive: true,
     role: USERSROLE.CLIENT,
@@ -66,7 +66,7 @@ export const mockUserArray: UserDTO[] = [
     firstName: 'Fede',
     lastName: '',
     email: 'string',
-    cell: '1234567',
+    cell: '22222',
     address: 'string',
     isActive: true,
     role: USERSROLE.CLIENT,
@@ -75,7 +75,7 @@ export const mockUserArray: UserDTO[] = [
     firstName: 'Fede',
     lastName: '',
     email: 'string',
-    cell: '1234567',
+    cell: '33333',
     address: 'string',
     isActive: true,
     role: USERSROLE.CLIENT,
@@ -84,6 +84,16 @@ export const mockUserArray: UserDTO[] = [
 
 export const mockUserPost: UserDTO = {
   firstName: 'Fede',
+  lastName: '',
+  email: 'string',
+  cell: '1234567',
+  address: 'string',
+  isActive: true,
+  role: USERSROLE.CLIENT,
+};
+
+export const mockUserPostError: UserDTO = {
+  firstName: 'error',
   lastName: '',
   email: 'string',
   cell: '1234567',

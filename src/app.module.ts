@@ -29,5 +29,6 @@ import { AdminModule } from './admin/admin.module';
     WeekModule,
     AdminModule,
   ],
+  providers: [],
 })
 export class AppModule {}

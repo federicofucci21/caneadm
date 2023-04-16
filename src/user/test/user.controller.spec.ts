@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
-import { WeekEntity } from '../week/entities/week.entity';
+import { UserController } from '../user.controller';
+import { UserService } from '../user.service';
+import { WeekEntity } from '../../week/entities/week.entity';
 import {
   mockProductsArray,
   mockUserPost,
   mockUserService,
-} from './__mock__/mockUser.controller';
+} from '../__mock__/mockUser.controller';
 
 describe('UserController', () => {
   let controller: UserController;
