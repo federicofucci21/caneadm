@@ -1,9 +1,10 @@
+import { WeekDTO } from '../../week/dto/week.dto';
 import { USERSROLE } from '../../constants/roles';
 import { OrderDTO, ProductsForOrderDTO } from '../../order/dto/order.dto';
-import { ProductEntity } from '../../product/entities/product.entity';
 import { WeekEntity } from '../../week/entities/week.entity';
 import { UserDTO } from '../dto/user.dto';
 import { UserEntity } from '../entities/user.entity';
+import { WEEKSTATE } from '../../constants/weekState';
 
 export const mockUserService = {
   createUser: jest.fn().mockImplementation((body) => {
@@ -110,11 +111,64 @@ export const mockOrder: OrderDTO = {
 
 export const mockProducts: ProductsForOrderDTO = {
   quantity: 10,
-  product: new ProductEntity(),
+  product: {
+    id: 1,
+    name: 'Product 1',
+    price: 10,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    stock: 100,
+    productOrder: [],
+  },
 };
 
 export const mockProductsArray: ProductsForOrderDTO[] = [
-  mockProducts,
-  mockProducts,
-  mockProducts,
+  {
+    quantity: 2,
+    product: {
+      id: 1,
+      name: 'Product 1',
+      price: 10,
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      stock: 100,
+      productOrder: [],
+    },
+  },
+  {
+    quantity: 1,
+    product: {
+      id: 2,
+      name: 'Product 2',
+      price: 15,
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      stock: 100,
+      productOrder: [],
+    },
+  },
+  {
+    quantity: 1,
+    product: {
+      id: 3,
+      name: 'Product 3',
+      price: 20,
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      stock: 100,
+      productOrder: [],
+    },
+  },
 ];
+
+export const mockOpenWeek: WeekDTO = {
+  name: 'string',
+  detail: 'detail',
+  open: new Date(),
+  close: new Date(),
+  status: WEEKSTATE.OPEN,
+};
