@@ -48,7 +48,6 @@ export const mockUserService = {
       },
       productsForOrder: products,
     };
-    console.log('RES', res);
     return res;
   }),
 };

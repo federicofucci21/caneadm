@@ -1,4 +1,4 @@
-import { mockUserArray } from './mockUser.controller';
+import { mockUserArray, mockUserPost } from './mockUser.controller';
 
 export const mockUserRepository = {
   save: jest.fn().mockImplementation((body) => {
@@ -13,7 +13,8 @@ export const mockUserRepository = {
   find: jest.fn().mockImplementation(() => mockUserArray),
   createQueryBuilder: jest.fn().mockReturnThis(),
   where: jest.fn().mockReturnThis(),
-  getOne: jest.fn(),
+  getOne: jest.fn().mockResolvedValue({ id: 1, ...mockUserPost }),
+  update: jest.fn(),
 };
 export const mockProductOrderRepository = {};
 export const mockOrderRepository = {};

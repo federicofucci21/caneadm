@@ -71,10 +71,10 @@ describe('UserController', () => {
   it('should return user by Id', async () => {
     mockUserRepository.getOne.mockResolvedValueOnce({
       id: 1,
-      name: 'John Doe',
+      name: 'John Nash',
     });
     const result = await service.getById(1);
-    expect(result).toEqual({ id: 1, name: 'John Doe' });
+    expect(result).toEqual({ id: 1, name: 'John Nash' });
     expect(mockUserRepository.createQueryBuilder).toHaveBeenCalled();
     expect(mockUserRepository.where).toHaveBeenCalledWith({ id: 1 });
     expect(mockUserRepository.getOne).toHaveBeenCalled();
@@ -83,5 +83,36 @@ describe('UserController', () => {
     mockUserRepository.getOne.mockResolvedValueOnce(undefined);
 
     await expect(service.getById(1)).rejects.toThrow(HttpException);
+  });
+  it('should return user by cellphone', async () => {
+    mockUserRepository.getOne.mockResolvedValueOnce({
+      id: 1,
+      name: 'John Nash',
+      cell: '12345678',
+    });
+    const result = await service.findOneByCell('12345678');
+    expect(result).toEqual({ id: 1, name: 'John Nash', cell: '12345678' });
+    expect(mockUserRepository.createQueryBuilder).toHaveBeenCalled();
+    expect(mockUserRepository.where).toHaveBeenCalledWith({ cell: '12345678' });
+    expect(mockUserRepository.getOne).toHaveBeenCalled();
+  });
+  it('should return an error when is called with wrong cell', async () => {
+    mockUserRepository.getOne.mockResolvedValueOnce(undefined);
+
+    await expect(service.findOneByCell('12345678')).rejects.toThrow(
+      HttpException,
+    );
+  });
+  it('should update user', async () => {
+    mockUserRepository.update.mockResolvedValueOnce({ affected: 1 });
+    const result = await service.updateUser(1, mockUserPost);
+    expect(result).toEqual({ id: 1, ...mockUserPost });
+    expect(mockUserRepository.update).toHaveBeenCalledWith(1, mockUserPost);
+  });
+  it('should error on update user', async () => {
+    mockUserRepository.update.mockResolvedValueOnce({ affected: 0 });
+    await expect(service.updateUser(1, mockUserPost)).rejects.toThrow(
+      HttpException,
+    );
   });
 });
