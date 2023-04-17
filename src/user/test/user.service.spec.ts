@@ -8,6 +8,7 @@ import { UserEntity } from '../entities/user.entity';
 import { UserService } from '../user.service';
 import {
   mockOpenWeek,
+  mockOrdersArray,
   mockProductsArray,
   mockUserPost,
 } from '../__mock__/mockUser.controller';
@@ -21,7 +22,7 @@ import {
 } from '../__mock__/mockUser.service';
 import { UserDTO } from '../dto/user.dto';
 import { WeekDTO } from '../../week/dto/week.dto';
-import { OrderDTO, ProductsForOrderDTO } from '../../order/dto/order.dto';
+import { ProductsForOrderDTO } from '../../order/dto/order.dto';
 
 describe('UserController', () => {
   let service: UserService;
@@ -47,10 +48,6 @@ describe('UserController', () => {
           provide: getRepositoryToken(ProductEntity),
           useValue: mockproductRepository,
         },
-        // {
-        //   provide: totalPrice,
-        //   useValue: mockTotalPrice,
-        // },
       ],
     })
       .overrideProvider(WeekService)
@@ -149,7 +146,7 @@ describe('UserController', () => {
     );
   });
   //create an order
-  it('shpuld create an order', async () => {
+  it('should create an order', async () => {
     const userId = 1;
     const products: ProductsForOrderDTO[] = mockProductsArray;
     const weekOpen: WeekDTO = mockOpenWeek;
@@ -206,5 +203,20 @@ describe('UserController', () => {
     await expect(service.orderCreate(1, mockProductsArray)).rejects.toThrow(
       HttpException,
     );
+  });
+  //all users orders
+  it('should get all user orders', async () => {
+    const result = await service.allUserOrders(1);
+
+    expect(result).toEqual(mockOrdersArray);
+    expect(mockOrderRepository.createQueryBuilder).toHaveBeenCalled();
+    expect(mockOrderRepository.where).toHaveBeenCalled();
+    expect(mockOrderRepository.leftJoinAndSelect).toHaveBeenCalled();
+    expect(mockOrderRepository.leftJoinAndSelect).toBeCalledTimes(2);
+    expect(mockOrderRepository.getMany).toBeCalledTimes(1);
+  });
+  it('should throw an error is user do not have any order', async () => {
+    mockOrderRepository.getMany.mockResolvedValueOnce(undefined);
+    await expect(service.allUserOrders(1)).rejects.toThrow(HttpException);
   });
 });

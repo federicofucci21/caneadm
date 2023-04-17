@@ -1,5 +1,6 @@
 import {
   mockOpenWeek,
+  mockOrdersArray,
   mockProducts,
   mockProductsArray,
   mockUserArray,
@@ -27,6 +28,10 @@ export const mockProductOrderRepository = {
 };
 export const mockOrderRepository = {
   save: jest.fn(),
+  createQueryBuilder: jest.fn().mockReturnThis(),
+  where: jest.fn().mockReturnThis(),
+  leftJoinAndSelect: jest.fn().mockReturnThis(),
+  getMany: jest.fn().mockResolvedValue(mockOrdersArray),
 };
 export const mockWeekService = {
   findOpenWeek: jest.fn().mockResolvedValue(mockOpenWeek),
@@ -35,15 +40,3 @@ export const mockproductRepository = {
   findOneBy: jest.fn().mockResolvedValue(mockProducts),
   update: jest.fn(),
 };
-
-//   const mockCreateQueryBuilder = () => ({
-//     select: jest.fn().mockReturnThis(),
-//     from: jest.fn().mockReturnThis(),
-//     where: jest.fn().mockReturnThis(),
-//     andWhere: jest.fn().mockReturnThis(),
-//     orderBy: jest.fn().mockReturnThis(),
-//     limit: jest.fn().mockReturnThis(),
-//     offset: jest.fn().mockReturnThis(),
-//     getMany: jest.fn().mockReturnValue([]),
-//     getOne: jest.fn().mockReturnValue(mockUserPost),
-//   });
