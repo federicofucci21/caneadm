@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductController } from '../product.controller';
 import { ProductService } from '../product.service';
 import { ProductsForOrderDTO } from '../../order/dto/order.dto';
-// import { ProductDTO } from '../dto/product.dto';
 import { ProductEntity } from '../entities/product.entity';
 
 describe('ProductController', () => {
@@ -63,6 +62,8 @@ describe('ProductController', () => {
   const mockProductService = {
     findAll: jest.fn().mockImplementation(() => mockProductsArray),
     findOneById: jest.fn().mockImplementation(() => mockProduct),
+    createProduct: jest.fn().mockImplementation(() => mockProduct),
+    deleteProduct: jest.fn().mockImplementation(() => mockProduct),
   };
 
   beforeEach(async () => {
@@ -89,6 +90,21 @@ describe('ProductController', () => {
   // Get Product by ID
   it('should get a product by ID', async () => {
     expect(await controller.getProductrById('1')).toEqual(mockProduct);
-    expect(await mockProductService.findOneById).toHaveBeenCalled();
+    expect(mockProductService.findOneById).toHaveBeenCalled();
+    expect(mockProductService.findOneById).toHaveBeenCalledWith(
+      expect.any(Number),
+    );
+  });
+  // Create Product
+  it('should create a product', async () => {
+    expect(await controller.createProduct(mockProduct)).toEqual(mockProduct);
+    expect(mockProductService.createProduct).toHaveBeenCalledWith(mockProduct);
+  });
+  //Delete Product
+  it('should delete a product', async () => {
+    expect(await controller.deleteProduct('1')).toEqual(mockProduct);
+    expect(mockProductService.deleteProduct).toHaveBeenCalledWith(
+      expect.any(Number),
+    );
   });
 });
