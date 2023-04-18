@@ -2,9 +2,22 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductController } from '../product.controller';
 import { ProductService } from '../product.service';
 import { ProductsForOrderDTO } from '../../order/dto/order.dto';
+// import { ProductDTO } from '../dto/product.dto';
+import { ProductEntity } from '../entities/product.entity';
 
 describe('ProductController', () => {
   let controller: ProductController;
+
+  const mockProduct: ProductEntity = {
+    id: 1,
+    name: 'Product 1',
+    price: 10,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    stock: 100,
+    productOrder: [],
+  };
 
   const mockProductsArray: ProductsForOrderDTO[] = [
     {
@@ -49,6 +62,7 @@ describe('ProductController', () => {
   ];
   const mockProductService = {
     findAll: jest.fn().mockImplementation(() => mockProductsArray),
+    findOneById: jest.fn().mockImplementation(() => mockProduct),
   };
 
   beforeEach(async () => {
@@ -71,5 +85,10 @@ describe('ProductController', () => {
     expect(await controller.getAllProducts()).toEqual(mockProductsArray);
     expect(await controller.getAllProducts()).toHaveLength(3);
     expect(mockProductService.findAll).toHaveBeenCalled();
+  });
+  // Get Product by ID
+  it('should get a product by ID', async () => {
+    expect(await controller.getProductrById('1')).toEqual(mockProduct);
+    expect(await mockProductService.findOneById).toHaveBeenCalled();
   });
 });
