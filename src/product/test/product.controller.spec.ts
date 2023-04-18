@@ -1,70 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductController } from '../product.controller';
 import { ProductService } from '../product.service';
-import { ProductsForOrderDTO } from '../../order/dto/order.dto';
-import { ProductEntity } from '../entities/product.entity';
+import {
+  mockProduct,
+  mockProductService,
+  mockProductsArray,
+} from '../__mock__/mockProduct.controller';
 
 describe('ProductController', () => {
   let controller: ProductController;
-
-  const mockProduct: ProductEntity = {
-    id: 1,
-    name: 'Product 1',
-    price: 10,
-    isActive: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    stock: 100,
-    productOrder: [],
-  };
-
-  const mockProductsArray: ProductsForOrderDTO[] = [
-    {
-      quantity: 2,
-      product: {
-        id: 1,
-        name: 'Product 1',
-        price: 10,
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        stock: 100,
-        productOrder: [],
-      },
-    },
-    {
-      quantity: 1,
-      product: {
-        id: 2,
-        name: 'Product 2',
-        price: 15,
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        stock: 100,
-        productOrder: [],
-      },
-    },
-    {
-      quantity: 1,
-      product: {
-        id: 3,
-        name: 'Product 3',
-        price: 20,
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        stock: 100,
-        productOrder: [],
-      },
-    },
-  ];
-  const mockProductService = {
-    findAll: jest.fn().mockImplementation(() => mockProductsArray),
-    findOneById: jest.fn().mockImplementation(() => mockProduct),
-    createProduct: jest.fn().mockImplementation(() => mockProduct),
-    deleteProduct: jest.fn().mockImplementation(() => mockProduct),
-  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -105,6 +49,16 @@ describe('ProductController', () => {
     expect(await controller.deleteProduct('1')).toEqual(mockProduct);
     expect(mockProductService.deleteProduct).toHaveBeenCalledWith(
       expect.any(Number),
+    );
+  });
+  //Update Product
+  it('should update a product', async () => {
+    expect(await controller.updateProduct('1', mockProduct)).toEqual(
+      mockProduct,
+    );
+    expect(mockProductService.updateProduct).toBeCalledWith(
+      expect.any(Number),
+      mockProduct,
     );
   });
 });
