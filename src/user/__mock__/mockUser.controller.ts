@@ -93,16 +93,6 @@ export const mockUserPost: UserDTO = {
   role: USERSROLE.CLIENT,
 };
 
-export const mockUserPostError: UserDTO = {
-  firstName: 'error',
-  lastName: '',
-  email: 'string',
-  cell: '1234567',
-  address: 'string',
-  isActive: true,
-  role: USERSROLE.CLIENT,
-};
-
 export const mockOrder: OrderDTO = {
   total: 100,
   user: new UserEntity(),
