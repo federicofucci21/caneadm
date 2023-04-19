@@ -49,4 +49,18 @@ describe('UserController', () => {
     mockproductRepository.find.mockResolvedValueOnce(undefined);
     await expect(service.findAll()).rejects.toThrow(HttpException);
   });
+  it('should return a product found by ID', async () => {
+    const result = await service.findOneById(1);
+    expect(result).toEqual({ id: expect.any(Number), ...mockProduct });
+    expect(mockproductRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+    expect(mockproductRepository.where).toHaveBeenCalledTimes(1);
+    expect(mockproductRepository.where).toHaveBeenCalledWith({
+      id: expect.any(Number),
+    });
+    expect(mockproductRepository.getOne).toHaveBeenCalledTimes(1);
+  });
+  it('should return an error if product do not found', async () => {
+    mockproductRepository.getOne.mockResolvedValueOnce(undefined);
+    await expect(service.findOneById(1)).rejects.toThrow(HttpException);
+  });
 });
